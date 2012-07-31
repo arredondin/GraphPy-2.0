@@ -13,10 +13,10 @@ import designer
 
 class Ui:
 
-	def __init__(self):
+	def __init__(self, graph):
 
 		self.__loader = Gtk.Builder()
-		self.__loader.add_from_file("view_model/ventanas.ui")
+		self.__loader.add_from_file("view/view_model/ventanas.ui")
 		self.__mainWindow = self.__loader.get_object("principal")
 		self.__darea = self.__loader.get_object("workstation")
 		self.__exportWindow = self.__loader.get_object("export")
@@ -34,13 +34,14 @@ class Ui:
 		self.__menuAlert = self.__loader.get_object("algoritmos")
 		self.__printWindow = self.__loader.get_object("printdialog")
 		self.__pageSetup = self.__loader.get_object("pagesetupdialog")
-		self.__draw = designer.Designer(self.__darea)
+		self.__draw = designer.Designer(self.__darea, graph)
 	
 	def connect_signals(self,controller):
 		self.__loader.connect_signals(controller)
 
 	def show_elements(self):
 		self.__mainWindow.show()
+		#self.__defineType.show()
 	
 	def change_operation(self, opId):
 		self.__draw.set_status(opId)
@@ -58,10 +59,12 @@ class Ui:
 		self.__printWindow.set_n_pages(1)
 		self.__printWindow.connect("draw_page", self.__printArea)
 		res = self.__printWindow.run(Gtk.PrintOperationAction.PRINT_DIALOG, self.__mainWindow)
-		
+		return
+
 	def __printArea(self, operation=None, context=None, page_nr=None):
 		contexted = context.get_cairo_context()
 		self.__cairo_context = self.__draw.draw_extern(contexted)
+		return
 
 	def to_pdf(self):
 		self.__direction = self.__exportWindow.get_filename()
@@ -70,6 +73,7 @@ class Ui:
 		else:
 			self.__formatExport = self.__loader.get_object("formato").get_active_text()
 			print self.__direction + self.__formatExport
+			#print self.__direction
 			self.__draw.create_file(self.__direction, self.__formatExport)
 			self.__exportWindow.hide()
 		
@@ -78,6 +82,12 @@ class Ui:
 
 	def destroy_export(self):
 		self.__exportWindow.hide()
+
+	def insert_new_node(self,data):
+		self.__draw.insert_new_node(data)
+
+	def get_over_node(self,data):
+		return self.__draw.get_node((data.x,data.y))
 
 	def get_draw_status(self):
 		return self.__draw.get_status()
@@ -95,8 +105,8 @@ class Ui:
 	def get_draw_over(self,data):
 		return self.__draw.get_over(data)
 
-	def get_draw_ind(self):
-		return self.__draw.get_ind()
+	def get_draw_selected(self):
+		return self.__draw.get_selected()
 
 	def get_draw_graph(self):
 		return self.__draw.get_graph()
@@ -144,18 +154,20 @@ class Ui:
 		self.__tmp = None
 		self.__draw.reset()
 
-	def del_nodo(self):
-		result = self.__draw.get_graph_super().del_node(self.__tmp.get_id())
+	def del_nodo(self, grafo):
+		pos = grafo.get_position_node(self.__tmp.get_id())
+		grafo.del_node(self.__tmp.get_id())
 		self.__draw.redrawing()
-		if result != None:
-			print "nada"
-			return result
-		return False
+		return pos
 
-	def del_edge(self):
-		if self.__draw.get_graph_super().del_edge(self.__tmp.get_connection()) == True:
-			self.__draw.redrawing()
-			return True
+	def del_edge(self, grafo):
+		pos1 = self.__tmp.get_connection()[0]
+		pos2 = self.__tmp.get_connection()[1]
+		pos1 = grafo.get_position_node(pos1)
+		pos2 = grafo.get_position_node(pos2)
+		grafo.del_edge(self.__tmp.get_connection())
+		self.__draw.redrawing()
+		return pos1, pos2
 
 	def set_malla(self, boolean):
 		self.__draw.set_malla(boolean)
@@ -197,9 +209,9 @@ class Ui:
 
  	def set_forma_nodo(self):
  		if self.__forma.get_active_text() == "Circulo":
- 			self.__tmp.set_form(1)
+ 			self.__tmp.set_shape(1)
  		if self.__forma.get_active_text() == "Cuadrado":
- 			self.__tmp.set_form(2)
+ 			self.__tmp.set_shape(2)
  		self.__draw.redrawing()
  		self.__menuFormaNodo.hide()
  		self.__tmp = None
@@ -211,13 +223,13 @@ class Ui:
 
  	def set_forma_arista(self):
  		if self.__forma.get_active_text() == "Normal":
- 			self.__tmp.set_form(1)
+ 			self.__tmp.set_shape(1)
  		if self.__forma.get_active_text() == "Segmentada 1":
- 			self.__tmp.set_form(2)
+ 			self.__tmp.set_shape(2)
  		if self.__forma.get_active_text() == "Segmentada 2":
- 			self.__tmp.set_form(3)
+ 			self.__tmp.set_shape(3)
  		if self.__forma.get_active_text() == "Punteada":
- 			self.__tmp.set_form(4)
+ 			self.__tmp.set_shape(4)
  		self.__draw.redrawing()
  		self.__menuFormaArista.hide()
  		self.__tmp = None
@@ -294,3 +306,6 @@ class Ui:
  
  	def set_data(self):
  		self.__draw.set_data()
+ 	
+ 	def get_draw(self):
+ 		return self.__draw

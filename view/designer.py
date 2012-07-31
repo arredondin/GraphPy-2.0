@@ -9,15 +9,15 @@ from PIL import Image
 class Designer:
 	"""Se encarga de Dibujar el Grafo en la Vista drawArea"""
 	
-	def __init__(self, drawArea):
+	def __init__(self, drawArea, graph):
 		"""Constructor de Designer, recibe el area donde se puede Dibujar"""
+		self.__graph = graph
 		self.__drawArea = drawArea
 		self.__connect_signals_draw()
 		self.__status = 1 		# Status del Menu Lateral
 		self.__sf = None
 		self.__cntx = None
 		self.__net = True
-		
 		# Variables de Seleccion
 		self.__selected = 0
 		self.__tmpSelection = None
@@ -38,10 +38,10 @@ class Designer:
 		self.__drawArea.add_events(Gdk.EventMask.BUTTON1_MOTION_MASK)
 		self.__drawArea.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK)
 	
-	def __draw(self, grafos, edges, printer = False):
+	def __draw(self, printer = False):
 		"""Dibuja en Pantalla o en Archivo el Grafo que se esta Creando"""
-			self.__sf=cairo.ImageSurface(cairo.FORMAT_ARGB32,740,500)
-			self.__drawArea.queue_draw()
+		self.__sf=cairo.ImageSurface(cairo.FORMAT_ARGB32,740,500)
+		print "waka"
 		if printer == False:
 			self.__cntx = cairo.Context(self.__sf)
 		self.__cntx.set_source_rgb(1,1,1)
@@ -58,21 +58,21 @@ class Designer:
 			tmpy2 = self.__graph.get_node(i.get_connection()[1]).get_position()[1]
 
 			self.__cntx.move_to(tmpx1,tmpy1)
-			self.__cntx.set_line_width(i.get_tam())
-			if i.get_form() == 1:
+			self.__cntx.set_line_width(i.get_size())
+			if i.get_shape() == 1:
 				self.__cntx.line_to(tmpx2,tmpy2)	
-			if i.get_form() == 2:
-				self.__cntx.set_dash([i.get_tam()*2,10], 0);
+			if i.get_shape() == 2:
+				self.__cntx.set_dash([i.get_size()*2,10], 0);
 				self.__cntx.line_to(tmpx2,tmpy2)	
-			if i.get_form() == 3:
-				self.__cntx.set_dash([i.get_tam()*4, 10], 0);
+			if i.get_shape() == 3:
+				self.__cntx.set_dash([i.get_size()*4, 10], 0);
 				self.__cntx.line_to(tmpx2,tmpy2)	
-			if i.get_form() == 4: 
-				self.__cntx.set_dash([i.get_tam(),i.get_tam()], 2);
+			if i.get_shape() == 4: 
+				self.__cntx.set_dash([i.get_size(),i.get_size()], 2);
 				self.__cntx.line_to(tmpx2,tmpy2)	
 			if i.get_directed() == True:
 				#self.__cntx.move_to((tmpx1+tmpx2)/2, (tmpy1+tmpy2)/2)
-				arrow_len = i.get_tam()+30
+				arrow_len = i.get_size()+30
 				angle = math.atan2(tmpy2 - tmpy1, tmpx2 - tmpx1) + math.pi
 				x1 = tmpx2 + arrow_len * math.cos(angle - 75)
 				y1 = tmpy2 + arrow_len * math.sin(angle - 75)
@@ -86,21 +86,21 @@ class Designer:
 				self.__cntx.stroke()
 				self.__cntx.move_to((x2+x1)/2, (y2+y1)/2)
 			else:
-				self.__cntx.move_to(((tmpx1+tmpx2)/2)+i.get_tam()+10,((tmpy1+tmpy2)/2)+i.get_tam()+10)
+				self.__cntx.move_to(((tmpx1+tmpx2)/2)+i.get_size()+10,((tmpy1+tmpy2)/2)+i.get_size()+10)
 			self.__cntx.show_text(str(i.get_label()))
 			self.__cntx.stroke()
 		for i in self.__graph.get_nodes():
 			self.__cntx.set_source_rgb(i.get_color()[0], i.get_color()[1], i.get_color()[2])
-			if i.get_form() == 1:
-				self.__cntx.arc(i.get_position()[0],i.get_position()[1], i.get_tam(), 0, 2*math.pi)
+			if i.get_shape() == 1:
+				self.__cntx.arc(i.get_position()[0],i.get_position()[1], i.get_size(), 0, 2*math.pi)
 				self.__cntx.fill()
-			if i.get_form() == 2:
-				self.__cntx.rectangle(i.get_position()[0]-i.get_tam(), i.get_position()[1]-i.get_tam(),i.get_tam()*2,i.get_tam()*2)
+			if i.get_shape() == 2:
+				self.__cntx.rectangle(i.get_position()[0]-i.get_size(), i.get_position()[1]-i.get_size(),i.get_size()*2,i.get_size()*2)
 				self.__cntx.fill()
-			self.__cntx.move_to(i.get_position()[0]+i.get_tam(),i.get_position()[1]-i.get_tam())
+			self.__cntx.move_to(i.get_position()[0]+i.get_size(),i.get_position()[1]-i.get_size())
 			self.__cntx.show_text(i.get_label())
 		if self.__selected == 2:
-			self.__cntx.set_source_rgba 0, 255, 0.3)
+			self.__cntx.set_source_rgba( 0, 255, 0.3)
 			self.__change_delta()
 			tmpx = self.__frameFinal[0] - self.__frameInicio[0]
 			tmpy = self.__frameFinal[1] - self.__frameInicio[1]
@@ -108,18 +108,18 @@ class Designer:
 			self.__cntx.fill()
 		return self.__sf
 
-	def __over_nodes(self,x ,y ):
+	def __over_nodes(self,x ,y):
 		"""Obtiene el Nodo que esta en la Posicion x,y"""
 		for i in self.__graph.get_nodes():
-			if i.get_form() == 1:
+			if i.get_shape() == 1:
 				resultado = (x-i.get_position()[0])*(x-i.get_position()[0]) + (y-i.get_position()[1])*(y-i.get_position()[1])
-				if resultado <= (i.get_tam())*(i.get_tam()):
+				if resultado <= (i.get_size())*(i.get_size()):
 					return i
-			if i.get_form() == 2:
-				if x >= i.get_position()[0]-i.get_tam()/2 and x <= i.get_position()[0]+i.get_tam()/2:
-					if y >= i.get_position()[1]-i.get_tam()/2 and y <= i.get_position()[1]+i.get_tam()/2:
+			if i.get_shape() == 2:
+				if x >= i.get_position()[0]-i.get_size()/2 and x <= i.get_position()[0]+i.get_size()/2:
+					if y >= i.get_position()[1]-i.get_size()/2 and y <= i.get_position()[1]+i.get_size()/2:
 						return i
-		return False
+		return None
 
 	def __over_select(self):
 		"""Agrega a una Lista todos los nodos que estan sobre un Area Seleccionada"""
@@ -129,7 +129,7 @@ class Designer:
 				if(pos[1] >= self.__frameInicio[1] and pos[1] <= self.__frameFinal[1]):
 					self.__temp.insert(len(self.__temp), i)
 	
-	def __over_edge(self, x, y ):
+	def __over_edge(self, x, y):
 		"""Funcion que obtiene el Arco que esta sobre el punto x,y"""
 		for i in self.__graph.get_edges():
 			id_nodos = i.get_connection()
@@ -140,7 +140,7 @@ class Designer:
 					tmpFinal = j.get_position()
 			pend = ( tmpInicio[1] - tmpFinal[1] )/( tmpInicio[0] - tmpFinal[0])
 			resultado = (pend*(x - tmpInicio[0]))-(y - tmpInicio[1])
-			if resultado <= i.get_tam() and resultado >= -i.get_tam():
+			if resultado <= i.get_size() and resultado >= -i.get_size():
 				if tmpInicio[0] < x and tmpFinal[0] > x:
 					return i
 				if tmpFinal[0] < x and tmpInicio[0] > x:
@@ -174,10 +174,6 @@ class Designer:
 		"""Obtiene el Area de Dibujo"""
 		return cairo.Context(self.__sf)
 	
-	def get_graph(self):
-		"""Obtiene una Copia del Grafo"""
-		return copy.deepcopy(self.__graph)
-	
 	def set_status(self, newStatus):
 		"""Cambia el estado de Designer:
 		1.- Crear Nodo
@@ -190,13 +186,6 @@ class Designer:
 	def get_status(self):
 		"""Obtiene el Estado de Designer"""
 		return self.__status
-	
-	def set_graph( self, newGraph):
-		"""Funcion que asigna un nuevo grafo al grafo actual
-		OBS: se utiliza para botones rehacer y deshacer"""
-		self.__graph = copy.deepcopy(newGraph)
-		print "seteando grafo",self.__graph
-		self.__drawArea.queue_draw()
 	
 	def get_selected(self):
 		"""Obtiene un valor que indica si se esta Seleccionando un Area (1)
@@ -307,3 +296,7 @@ class Designer:
 		self.__cntx = surface
 		self.__draw(False, False, False, False, True)
 		return self.__cntx
+
+	def set_graph(self, newGraph):
+		self.__graph = newGraph
+		self.__drawArea.queue_draw()

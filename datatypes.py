@@ -1,3 +1,6 @@
+import random
+import time
+
 class Node:
 	"""Clase Nodo, generada para la vista"""
 	def __init__(self, data):
@@ -62,7 +65,7 @@ class Edge:
 		self.__color = (0,0,0)
 		self.__shape = 1
 		self.__weight = 1
-		self.__wide = 5
+		self.__size = 5
 		self.__connection = connection
 	
 	def set_color(self, newColor):
@@ -89,13 +92,13 @@ class Edge:
 		"""Obtiene el peso de la Arista"""
 		return self.__label
 	
-	def set_wide(self, newWide):
+	def set_size(self, newSize):
 		"""Modifica el Grosor de la Arista"""
-		self.__wide = newWide
+		self.__wide = newSize
 	
-	def get_wide(self):
+	def get_size(self):
 		"""Obtiene el Grosor de la Arista"""
-		return self.__wide
+		return self.__size
 
 	def set_connection(self, newConnection):
 		"""Modifica la Coneccion de la Arista"""
@@ -114,23 +117,15 @@ class Graph:
 	
 	def new_node(self, pos):
 		"""Inserta un nuevo Nodo en el Grafo, recibe el ID, Etiqueta y la Posicion (x,y)"""
-		try:
-			tmp = Node(pos)
-			self.__nodes.append(tmp)
-			return True
-		except:
-			return False
+		tmp = Node(pos)
+		self.__nodes.append(tmp)
 	
 	def new_edge(self, connection):
 		"""Inserta una Arista al Grafo, recibe el Peso de la arista y la Conexion 
 		(ID Nodo Origen, ID Nodo Destino)"""
-		try:
-			tmpEdge = Edge(connection)
-			self.__edges.append(tmpEdge)
-			return True
-		except:
-			return False
-	
+		tmpEdge = Edge(connection)
+		self.__edges.append(tmpEdge)
+		
 	def get_nodes(self):
 		"""Obtiene la Lista de Nodos del Grafo"""
 		return self.__nodes
@@ -141,38 +136,41 @@ class Graph:
 	
 	def del_node(self, idTarget):
 		"""Elimina un Nodo del grafo por su ID"""
-		for i in range(len(self.__nodes)):
-			if(self.__nodes[i].get_id() == idTarget):
-				var = i
 		for i in self.__nodes:
 			if i.get_id() == idTarget:
 				for j in self.__edges:
 					if j.get_connection()[0] == idTarget or j.get_connection()[1] == idTarget:
 						self.__edges.remove(j)
 				self.__nodes.remove(i)
-				return var
-		return None
 
 	def del_edge(self, connection):
 		"""Elimina una Arista del Grafo por su Conexion"""
 		for i in self.__edges:
 			if i.get_connection() == connection:
 				self.__edges.remove(i)
-				return True
-		return False
 	
 	def get_node(self, idTarget):
 		"""Obtiene un Nodo del Grafo por su ID"""
-		try:
-			for i in self.__nodes:
-				if idTarget == i.get_id():
-					return i
-		except:
-			return None
-	
+		for i in self.__nodes:
+			if idTarget == i.get_id():
+				return i
+		
 	def exist_edge(self, connection):
 		"""Verifica si existe una Arista que Une a 2 Nodos (Conexion) en el Grafo"""
 		for i in self.__edges:
 			if i.get_connection() == connection:
 				return True
 		return False
+	
+	def get_position_node(self, idTarget):
+		"""Obtiene la Posicion de un Nodo por su ID"""
+		for i in xrange(self.__nodes):
+			if self.__nodes[i].get_id() == idTarget:
+				return i
+	
+	def get_position_edge(self, connection):
+		"""Obtiene la Posicion de una arista por su conection"""
+		for i in xrange(self.__edges):
+			if self.__edges[i].get_connection() == connection:
+				return i
+	
