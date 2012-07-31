@@ -1,4 +1,4 @@
-import copy	# Para hacer copias superficiales (shallow copies)
+import copy		# Para hacer copias superficiales (shallow copies)
 
 class Matrix:
 	"""Clase que maneja la Matriz de Adyacencia/Incidencia"""
