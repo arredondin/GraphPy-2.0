@@ -16,9 +16,9 @@ class Matrix:
 		Crea una nueva matriz. Todos sus elementos tienen el valor '0'
 		Retorna la nueva matriz"""
 		matrix = []
-		for i in range(dim):
+		for i in xrange(dim):
 			matrix.append([])
-			for j in range(dim):
+			for j in xrange(dim):
 				matrix[i].append(0)
 		return matrix
 	
@@ -35,7 +35,7 @@ class Matrix:
 		"""Retorna una copia 'superficial' (por valor) de la matriz"""
 		dim = self.get_dim()
 		matrix = []
-		for i in range(dim):
+		for i in xrange(dim):
 			temp = copy.copy(self.__matrix[i])
 			matrix.append(temp)
 		return matrix
@@ -46,12 +46,12 @@ class Matrix:
 		try:
 			dim = self.get_dim()
 			new = []
-			for i in range(dim):
+			for i in xrange(dim):
 				new.append(0)
 			self.__matrix.append(new)
 			self.__dimMatrix += 1
 			dim = self.get_dim()
-			for i in range(dim):
+			for i in xrange(dim):
 				self.__matrix[i].append(0)
 			return True
 		except:
@@ -65,7 +65,7 @@ class Matrix:
 			self.__matrix.pop(target)
 			self.__dimMatrix -= 1
 			dim = self.get_dim()
-			for i in range(dim):
+			for i in xrange(dim):
 				self.__matrix[i].pop(target)
 			return True
 		except:
@@ -79,8 +79,8 @@ class Matrix:
 		"""Determina si la matriz es simetrica o no
 		Retorna 'True' si es simetrica, 'False' si no lo es"""
 		dim = self.get_dim()
-		for i in range(dim):
-			for j in range(dim):
+		for i in xrange(dim):
+			for j in xrange(dim):
 				if j <= i:
 					continue
 				if self.__matrix[i][j] != self.__matrix[j][i]:
@@ -95,8 +95,8 @@ class Matrix:
 			return matrix
 		
 		dim = self.get_dim()
-		for i in range(dim):
-			for j in range(dim):
+		for i in xrange(dim):
+			for j in xrange(dim):
 				if j <= i:
 					continue
 				if matrix[i][j] != 0:

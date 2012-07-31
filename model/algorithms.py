@@ -120,3 +120,9 @@ class Files:
 				self.__file.write(str(i.get_form())+"\n")
 			self.__file.close()
 			self.__state = False
+
+
+	#
+	#  DATA MANAGEMENT
+	#
+

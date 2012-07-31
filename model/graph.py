@@ -26,9 +26,9 @@ class Graph:
 		Determina, utilizando Busqueda en Profundidad, si el grafo es conexo o no
 		Retorna 'True' si es conexo, 'False' si no lo es"""
 		dim = len(matrix)
-		for i in range(dim):
+		for i in xrange(dim):
 			tester = self.__breadthfirst_search(matrix, i)
-			for j in range(dim):
+			for j in xrange(dim):
 				if tester[j]['set'] == 0:
 					return False
 		return True
@@ -39,7 +39,7 @@ class Graph:
 		Retorna una lista de diccionarios con la informacion recopilada"""
 		status = []
 		dim = len(matrix)
-		for i in range(dim):
+		for i in xrange(dim):
 			data = {'dist': -1, 'from': -1, 'set': 0}
 			#  'dist': distancia acumulada, (-1) representa distancia infinita
 			#  'from': nodo del que proviene la distancia menor, (-1) indica sin origen
@@ -47,8 +47,8 @@ class Graph:
 			if i == origin:
 				data['dist'] = 0
 			status.append(data)
-		for i in range(dim):
-			for j in range(dim):
+		for i in xrange(dim):
+			for j in xrange(dim):
 				status[origin]['set'] = 2
 				if matrix[origin][j] != 0:
 					accumulated = matrix[origin][j] + status[origin]['dist']
@@ -60,7 +60,7 @@ class Graph:
 						status[j]['dist'] = accumulated
 						status[j]['from'] = origin
 			menor = -1
-			for j in range(dim):
+			for j in xrange(dim):
 				if status[j]['set'] == 1:
 					if menor == -1 and status[j]['dist'] > 0:
 						menor = j
@@ -95,7 +95,7 @@ class Graph:
 		actual = begin
 		finished = False
 		while not finished:
-			for i in range( len(matrix) ):
+			for i in xrange( len(matrix) ):
 				if i == father:
 					continue
 				if begin != father and matrix[actual][begin] != 0:
@@ -113,9 +113,9 @@ class Graph:
 		Retorna la matriz asociada al arbol, 'None' si no encuentra un arbol"""
 		dim = len(matrix)
 		kruskal = []
-		for i in range(dim):
+		for i in xrange(dim):
 			kruskal.append([])
-			for j in range(dim):
+			for j in xrange(dim):
 				kruskal[i].append(0)
 		traveled = []
 		
@@ -123,8 +123,8 @@ class Graph:
 			smaller = 0
 			row = -1
 			col = -1
-			for i in range(dim):
-				for j in range(dim):
+			for i in xrange(dim):
+				for j in xrange(dim):
 					if matrix[i][j] != 0:
 						if smaller == 0:
 							row = i
@@ -164,7 +164,7 @@ class Graph:
 			temp = copy.copy(stack)
 			paths.append(temp)
 		else:
-			for i in range(dim):
+			for i in xrange(dim):
 				if stack.count(i) == 0 and matrix[actual][i] != 0:
 					self.__hamilton_algorithm(i, stack, paths)
 		stack.pop()
@@ -174,8 +174,8 @@ class Graph:
 		counter = 0
 		matrix = self.__matrix.get_matrix()
 		dim = self.get_nodes()
-		for i in range(dim):
-			for j in range(dim):
+		for i in xrange(dim):
+			for j in xrange(dim):
 				if matrix[i][j] != 0:
 					counter += 1
 		return counter
@@ -187,7 +187,7 @@ class Graph:
 		if len(path) == (edges + 1):
 			array.append(copy.copy(path))
 		else:
-			for i in range(dim):
+			for i in xrange(dim):
 				if matrix[actual][i] != 0:
 					if not directed:
 						matrix[i][actual] = 0
@@ -207,7 +207,7 @@ class Graph:
 		# revisa si array tiene caminos repetidos
 		# el codigo se ve feo, supongo que se puede mejorar
 		dim = self.get_nodes()
-		for path in range( len(array) ):
+		for path in xrange( len(array) ):
 			comparePath = path + 1
 			while comparePath < len(array):
 				i = j = 0
@@ -248,7 +248,7 @@ class Graph:
 		if not self.__validate_target(node):
 			return None
 		degree = 0
-		for i in range( len(matrix) ):
+		for i in xrange( len(matrix) ):
 			if matrix[node][i] != 0:
 				degree += 1
 		return degree
@@ -321,9 +321,9 @@ class Graph:
 		matrix = self.get_matrix()
 		dim = self.get_nodes()
 		complementary = []
-		for i in range(dim):
+		for i in xrange(dim):
 			complementary.append([])
-			for j in range(dim):
+			for j in xrange(dim):
 				if i == j:
 					complementary[i].append(0)
 					continue
@@ -337,9 +337,9 @@ class Graph:
 		"""Retorna la Matriz del grafo completo"""
 		dim = self.get_nodes()
 		complete = []
-		for i in range(dim):
+		for i in xrange(dim):
 			complete.append([])
-			for j in range(dim):
+			for j in xrange(dim):
 				if i == j:
 					complete[i].append(0)
 					continue
@@ -380,8 +380,8 @@ class Graph:
 		Retorna 'True' si es ponderado, 'False' si no lo es"""
 		matrix = self.get_matrix()
 		dim = self.get_nodes()
-		for i in range(dim):
-			for j in range(dim):
+		for i in xrange(dim):
+			for j in xrange(dim):
 				if matrix[i][j] != 0 and matrix[i][j] != 1:
 					return True
 		return False
@@ -390,7 +390,7 @@ class Graph:
 		"""Determina si el grafo es completo o no
 		Retorna 'True' si es completa, 'False' si no lo es"""
 		cantNodos = self.get_nodes()
-		for i in range(cantNodos):
+		for i in xrange(cantNodos):
 			if self.degree(i) != (cantNodos - 1):
 				return False
 		return True
@@ -403,11 +403,11 @@ class Graph:
 		matrix = self.get_matrix()
 		dim = self.get_nodes()
 		colored = []
-		for i in range(dim):
+		for i in xrange(dim):
 			colored.append(0)
 		
-		for i in range(dim):
-			for j in range(dim):
+		for i in xrange(dim):
+			for j in xrange(dim):
 				if colored[i] == 0:
 					colored[i] = 1
 				if matrix[i][j] != 0:
@@ -442,7 +442,7 @@ class Graph:
 		matrix = self.get_matrix()
 		roads = self.__breadthfirst_search(matrix, origin)
 		paths = []
-		for i in range(dim):
+		for i in xrange(dim):
 			temp = self.__get_path(roads, i)
 			paths.append(temp)
 		return paths
@@ -465,7 +465,7 @@ class Graph:
 			return None
 		temp = []
 		path = []
-		for i in range(dim):
+		for i in xrange(dim):
 			self.__hamilton_algorithm(i, temp, path)
 		self.__filter(path)
 		if len(path) == 0:
@@ -480,7 +480,7 @@ class Graph:
 			return None
 		
 		oddCounter = []
-		for i in range(dim):
+		for i in xrange(dim):
 			if self.degree(i)%2 == 1:
 				oddCounter.append(i)
 		
@@ -499,7 +499,7 @@ class Graph:
 		if self.__matrix.symmetry() == True:
 			self.__fleury(matrix, start, array, path, self.__edges()/2, False)
 		else:
-			for i in range(dim):
+			for i in xrange(dim):
 				self.__fleury(matrix, i, array, path, self.__edges(), True)
 				if len(array)>0:
 					return array
