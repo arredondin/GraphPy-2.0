@@ -1,0 +1,5 @@
+# Archivos creados por python
+*.pyc
+
+# Para uso personal (testear nuevas funciones, implementaciones, etc)
+test.py
