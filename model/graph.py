@@ -354,35 +354,19 @@ class Graph:
 	
 	def color_graph(self):
 		"""Colorea un grafo con la minima cantidad de colores
-		Retorna una lista que contiene las listas de nodos del mismo color"""
-		lastColor = 2
+		Retorna una lista que contiene las listas de nodos
+		Cada sublista de nodos son nodos que deben tener el mismo color"""
 		matrix = self.get_matrix()
 		dim = self.get_nodes()
+		lastColor = 2
 		colored = []
 		for i in xrange(dim):
 			colored.append(0)
-		
+				
 		for i in xrange(dim):
 			if colored[i] == 0:
 				colored[i] = 1
 			
-			count = 1
-			while count != 0 and i != 0:
-				for j in xrange(i): # comparar nodo actual con los anteriores
-					if matrix[i][j] != 0 and colored[i] == colored[j]:
-						if colored[i] == lastColor and count == 1:
-							colored[i] = 1
-						elif colored[i] == lastColor and count != 1:
-							print 'entre al IF DE LA MUERTE!'
-							lastColor += 1
-							colored[i] = lastColor
-						else:
-							colored[i] = 1
-						break
-				count += 1
-				if j == (i - 1):
-					count = 0
-			# end while
 			for j in xrange(i + 1,dim): # setear valores en los nodos siguientes
 				if matrix[i][j] != 0:
 					if colored[j] == 0 and colored[i] != lastColor:
@@ -390,8 +374,17 @@ class Graph:
 					if colored[j] == 0 and colored[i] == lastColor:
 						colored[j] = 1
 					if colored[j] != 0 and colored[i] == colored[j]:
-						pass
-			print 'colored final = ', colored
+						colored[j] = lastColor + 1
+			if colored.count(lastColor + 1) != 0:
+				lastColor += 1
+		
+		group = []
+		for i in xrange(lastColor):
+			group.append([])
+		for i in xrange(dim):
+			tmp = colored[i] - 1
+			group[tmp].append(i)
+		return group
 	
 	def directed(self):
 		"""Determina si el grafo es dirigido o no dirigido
@@ -441,26 +434,10 @@ class Graph:
 	def bipartite(self):
 		"""Determina si el grafo es bipartito o no
 		Retorna 'True' si es bipartito, 'False' si no lo es"""
-		color1 = 1
-		color2 = 2
-		matrix = self.get_matrix()
-		dim = self.get_nodes()
-		colored = []
-		for i in xrange(dim):
-			colored.append(0)
-		
-		for i in xrange(dim):
-			for j in xrange(dim):
-				if colored[i] == 0:
-					colored[i] = 1
-				if matrix[i][j] != 0:
-					if colored[j] == 0 and colored[i] == 1:
-						colored[j] = 2
-					if colored[j] == 0 and colored[i] == 2:
-						colored[j] = 1
-					if colored[j] != 0 and colored[i] == colored[j]:
-						return False
-		return True
+		tmp = self.color_graph()
+		if len(tmp) == 2:
+			return True
+		return False
 	
 	#
 	#  PUBLIC METHODS - GRAPH ALGORITHMS
