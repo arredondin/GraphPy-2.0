@@ -10,6 +10,7 @@ except:
 		exit(1)
 
 import designer
+import string
 
 class Ui:
 
@@ -25,6 +26,7 @@ class Ui:
 		self.__menuNodo = self.__loader.get_object("menu-nodo")
 		self.__menuArista = self.__loader.get_object("menu-arista")
 		self.__labelWindow = self.__loader.get_object("get-label")
+		self.__sizeWindow = self.__loader.get_object("get-size")
 		self.__menuColor = self.__loader.get_object("color")
 		self.__menuCoordenates = self.__loader.get_object("coordenadas")
 		self.__menuTamanio = self.__loader.get_object("tamanio")
@@ -35,6 +37,10 @@ class Ui:
 		self.__printWindow = self.__loader.get_object("printdialog")
 		self.__pageSetup = self.__loader.get_object("pagesetupdialog")
 		self.__defineType = self.__loader.get_object("tipo-grafo")
+		self.__optionEditNode = self.__loader.get_object("show-nodes")
+		self.__optionEditEdge = self.__loader.get_object("show-edges")
+		self.__editNode = self.__loader.get_object("edita-nodo")
+		self.__editEdge = self.__loader.get_object("edita-arista")
 		self.__draw = designer.Designer(self.__darea, graph)
 	
 	def connect_signals(self,controller):
@@ -44,8 +50,9 @@ class Ui:
 		self.__mainWindow.show()
 		self.__defineType.show()
 	
-	def change_operation(self, opId):
+	def change_operation(self, opId, string):
 		self.__draw.set_status(opId)
+		self.__statusBar.push(0, string)
 		self.__draw.reset()
 			
 	def throw_ui(self):
@@ -130,16 +137,33 @@ class Ui:
 	def reset(self):
 		self.__draw.reset()
 
-	def show_label(self):
+	def show_label_node(self):
 		self.__labelText = self.__loader.get_object("label-nodo")
 		self.__labelText.set_text(str(self.__tmp.get_label()))
 		self.__labelWindow.show()
 
-	def set_new_label(self):
+	def show_label_edge(self):
+		self.__sizeText = self.__loader.get_object("label-edge")
+		self.__sizeText.set_text(str(self.__tmp.get_weight()))
+		self.__sizeWindow.show()
+
+	def set_new_label_node(self):
 		self.__tmp.set_label(self.__labelText.get_text())
 		self.__draw.redrawing()
 		self.__labelText.set_text("")
 		self.__labelWindow.hide()
+		self.__tmp = None
+		self.__draw.reset()
+
+	def set_new_label_edge(self, grafo, viewgraph):
+		self.__tmp.set_weight(self.__sizeText.get_text())
+		if viewgraph.get_type():
+			grafo.add_edge_dir(viewgraph.get_position_node(self.__tmp.get_connection()[0]),viewgraph.get_position_node(self.__tmp.get_connection()[1]),int(self.__tmp.get_weight()))
+		else:
+			grafo.add_edge_ndir(viewgraph.get_position_node(self.__tmp.get_connection()[0]),viewgraph.get_position_node(self.__tmp.get_connection()[1]),int(self.__tmp.get_weight()))
+		self.__draw.redrawing()
+		self.__sizeText.set_text("")
+		self.__sizeWindow.hide()
 		self.__tmp = None
 		self.__draw.reset()
 
@@ -278,44 +302,119 @@ class Ui:
  		self.__bufferText.destroy()
  		self.__menuMatriz.hide()
 
- 	def show_algoritmo(self, string, option):
- 		if option == 1:
- 			self.__loader.get_object("titulo_algoritmo").set_text("Grafo Dirigido")
- 			self.__loader.get_object("resultado").set_text(string)
- 			self.__menuAlert.show()
- 		if option == 2:
- 			self.__loader.get_object("titulo_algoritmo").set_text("Tabla de Grados")
- 			self.__loader.get_object("resultado").set_text(string)
- 			self.__menuAlert.show()
- 		if option == 3:
- 			self.__loader.get_object("titulo_algoritmo").set_text("Completitud")
- 			self.__loader.get_object("resultado").set_text(string)
- 			self.__menuAlert.show()
- 		if option == 4:
- 			self.__loader.get_object("titulo_algoritmo").set_text("Bipartito")
- 			self.__loader.get_object("resultado").set_text(string)
- 			self.__menuAlert.show()
- 		if option == 5:
- 			self.__loader.get_object("titulo_algoritmo").set_text("Conexos")
- 			self.__loader.get_object("resultado").set_text(string)
- 			self.__menuAlert.show()
- 		if option == 6:
- 			self.__loader.get_object("titulo_algoritmo").set_text("Ciclos Eulerianos")
- 			self.__loader.get_object("resultado").set_text(string)
- 			self.__menuAlert.show()
- 		if option == 7:
- 			self.__loader.get_object("titulo_algoritmo").set_text("Caminos Hamiltonianos")
- 			self.__loader.get_object("resultado").set_text(string)
- 			self.__menuAlert.show()
- 		if option == 8:
- 			self.__loader.get_object("titulo_algoritmo").set_text("Dijkstra")
- 			self.__loader.get_object("resultado").set_text(string)
- 			self.__menuAlert.show()
- 		if option == 9:
- 			self.__loader.get_object("titulo_algoritmo").set_text("Kruskal")
- 			self.__loader.get_object("resultado").set_text(string)
- 			self.__menuAlert.show()
- 
+	def show_directed(self, grafo):
+		self.__loader.get_object("titulo_algoritmo").set_text("Grafo Dirigido")
+		if grafo.directed():
+ 			self.__loader.get_object("resultado").set_text("El Grafo es Dirigido")
+ 		else:
+ 			self.__loader.get_object("resultado").set_text("El Grafo No es Dirigido")
+ 		self.__menuAlert.show()
+	
+	def show_grades(self, grafo):
+		self.__loader.get_object("titulo_algoritmo").set_text("Lista de Grados")
+		nodes = grafo.get_nodes()
+		texto = ""
+		c = 0
+		for i in xrange(nodes):
+			texto = texto + "Nodo "+ str(c) + ": "+ str(grafo.get_degree(i)) + "\n"
+			c += 1
+		self.__loader.get_object("resultado").set_text(texto)
+		self.__menuAlert.show()
+	
+	def show_complete(self, grafo):
+		self.__loader.get_object("titulo_algoritmo").set_text("Grafo Completo")
+		if grafo.complete():
+			self.__loader.get_object("resultado").set_text("El Grafo si es Completo")
+		else:
+			self.__loader.get_object("resultado").set_text("El Grafo no es Completo")
+		self.__menuAlert.show()
+	
+	def show_bipartite(self, grafo):
+		self.__loader.get_object("titulo_algoritmo").set_text("Grafo Bipartito")
+		if grafo.bipartite():
+			self.__loader.get_object("resultado").set_text("El Grafo si es Bipartito")
+			#
+			#COLOREAR
+			#
+		else:
+			self.__loader.get_object("resultado").set_text("El Grafo no es Bipartito")
+		self.__menuAlert.show()
+		
+	def show_connected(self, grafo):
+		self.__loader.get_object("titulo_algoritmo").set_text("Grafo Conexo")
+		if grafo.connected()[0]:
+			print "waka"
+			if grafo.connected()[1] == 'strongly connected':
+				self.__loader.get_object("resultado").set_text("El Grafo es fuertemente Conexo")
+			if grafo.connected()[1] == 'weakly connected':
+				self.__loader.get_object("resultado").set_text("El Grafo es debilmente Conexo")
+			if grafo.connected()[1] == 'connected':
+				self.__loader.get_object("resultado").set_text("El Grafo es Conexo")
+		else:
+			self.__loader.get_object("resultado").set_text("El Grafo No es Conexo")
+		self.__menuAlert.show()
+		
+	def show_euler(self, grafo, viewgraph):
+		self.__loader.get_object("titulo_algoritmo").set_text("Algoritmo de Euler")
+		if grafo.eulerian_paths() == None:
+			self.__loader.get_object("resultado").set_text("El Grafo No tiene Caminos Elulerianos")
+		else:
+			matrix = grafo.eulerian_paths()
+			dim1 = len(matrix)
+			text = ""
+			for i in xrange(dim1):
+				text = text + "Camino " + str(i) + ": "
+				dim2 = len(matrix[i])
+				for j in xrange(dim2):
+					text = text + viewgraph.get_node_for_position(int(matrix[i][j])).get_label() + " - "
+				text = text + "\n"
+			self.__loader.get_object("resultado").set_text(text)
+		self.__menuAlert.show()			
+	
+	def show_hamilton(self, grafo, viewgraph):
+		self.__loader.get_object("titulo_algoritmo").set_text("Algoritmo Hamiltoniano")
+		if grafo.hamiltonian_paths() == None:
+			self.__loader.get_object("titulo_algoritmo").set_text("El Grafo No posee Caminos Hamiltonianos")
+		else:
+			matrix = grafo.hamiltonian_paths()
+			dim1 = len(matrix)
+			text = ""
+			for i in xrange(dim1):
+				text = text + "Camino " + str(i) + ": "
+				dim2 = len(matrix[i])
+				for j in xrange(dim2):
+					text = text + viewgraph.get_node_for_position(int(matrix[i][j])).get_label() + " - "
+				text = text + "\n"
+			self.__loader.get_object("resultado").set_text(text)
+		self.__menuAlert.show()		
+	
+	def show_dijkstra(self, grafo, viewgraph):
+		self.__loader.get_object("titulo_algoritmo").set_text("Algoritmo Dijkstra")
+		label = self.__tmp.get_label()
+		iD = self.__tmp.get_id()
+		pos = viewgraph.get_position_node(iD)
+		print iD
+		matrix = grafo.dijkstra(pos)
+		if matrix == None:
+			self.__loader.get_object("resultado").set_text("El Nodo Seleccionado no Cumple los requisitos por ponderacion")
+		else:
+			dim1 = len(matrix)
+			text = ""
+			for i in xrange(dim1):
+				text = text + "De " + label + " " + str(pos) + " a " + viewgraph.get_node_for_position(i).get_label() + " " + str(i) + ": "
+				if matrix[i] != None:
+					dim2 = len(matrix[i])
+					for j in xrange(dim2):
+						text = text + viewgraph.get_node_for_position(int(matrix[i][j])).get_label() + "-" + str(matrix[i][j]) + ""
+				else:
+					text = text + "No hay Camino Especifico"
+				text = text + "\n"
+			self.__loader.get_object("resultado").set_text(text)
+		self.__menuAlert.show()	
+				
+	def hide_alert(self):
+		self.__menuAlert.hide()
+	
  	def set_data(self):
  		self.__draw.set_data()
  	
@@ -329,3 +428,66 @@ class Ui:
  		else:
  			self.__defineType.hide()
  			return False
+ 	
+ 	def show_list_node(self, grafo):
+ 		self.__loader.get_object("title").set_text("Lista de Nodos")
+ 		for i in grafo.get_nodes():
+ 			self.__loader.get_object("listado").append(None, str(i.get_label())+"-"+str(i.get_id()))
+ 		self.__optionEditNode.show()
+ 		
+ 	def show_list_edge(self, grafo):
+ 		self.__loader.get_object("title1").set_text("Lista de Aristas")
+ 		for i in grafo.get_edges():
+ 			self.__loader.get_object("listado1").append(None, str(i.get_connection()[0])+","+str(i.get_connection()[1]))
+ 		self.__optionEditEdge.show()
+ 	
+ 	def show_all_node(self, grafo):
+ 		tmp = self.__loader.get_object("listado").get_active_text()
+ 		self.__tmp = grafo.get_node(float(tuple(string.split(tmp, "-"))[1]))
+ 		self.__loader.get_object("listado").remove_all()
+ 		self.__optionEditNode.hide()
+ 		self.__loader.get_object("coord_x").set_text(str(self.__tmp.get_position()[0]))
+ 		self.__loader.get_object("coord_y").set_text(str(self.__tmp.get_position()[1]))
+ 		self.__loader.get_object("newlabel").set_text(str(self.__tmp.get_label()))
+ 		self.__loader.get_object("newtamanio").set_text(str(self.__tmp.get_size()))
+ 		self.__editNode.show()
+ 		
+ 	def set_all_node(self, grafo):
+ 		x = float(self.__loader.get_object("coord_x").get_text())
+ 		y = float(self.__loader.get_object("coord_y").get_text())
+ 		self.__tmp.set_position((x,y))
+ 		if self.__loader.get_object("newshape").get_active_text() == "Circulo":
+ 			self.__tmp.set_shape(1)
+ 		if self.__loader.get_object("newshape").get_active_text() == "Cuadrado":
+ 			self.__tmp.set_shape(2)
+ 		self.__tmp.set_label(str(self.__loader.get_object("newlabel").get_text()))
+ 		self.__tmp.set_size(float(self.__loader.get_object("newtamanio").get_text()))
+ 		tmp = self.__loader.get_object("newcolor").get_current_rgba()
+ 		self.__tmp.set_color((tmp.red, tmp.green, tmp.blue))
+ 		self.__editNode.hide()
+ 		self.__draw.redrawing()
+ 	
+ 	def show_all_edge(self, grafo):
+ 		tmp = self.__loader.get_object("listado1").get_active_text()
+ 		self.__tmp = grafo.get_edge((float(tuple(string.split(tmp, ","))[0]), float(tuple(string.split(tmp, ","))[1])))
+ 		self.__loader.get_object("listado1").remove_all()
+ 		self.__optionEditEdge.hide()
+ 		self.__loader.get_object("newlabel1").set_text(str(self.__tmp.get_weight()))
+ 		self.__loader.get_object("newtamanio1").set_text(str(self.__tmp.get_size()))
+ 		self.__editEdge.show()
+ 		
+ 	def set_all_edge(self, grafo):
+ 		self.__tmp.set_weight(float(self.__loader.get_object("newlabel1").get_text()))
+ 		if self.__loader.get_object("newshape1").get_active_text() == "Normal":
+ 			self.__tmp.set_shape(1)
+ 		if self.__loader.get_object("newshape1").get_active_text() == "Segmentada 1":
+ 			self.__tmp.set_shape(2)
+ 		if self.__loader.get_object("newshape1").get_active_text() == "Segmentada 2":
+ 			self.__tmp.set_shape(3)
+ 		if self.__loader.get_object("newshape1").get_active_text() == "Punteada":
+ 			self.__tmp.set_shape(4)
+ 		self.__tmp.set_size(float(self.__loader.get_object("newtamanio1").get_text()))
+ 		tmp = self.__loader.get_object("newcolor1").get_current_rgba()
+ 		self.__tmp.set_color((tmp.red, tmp.green, tmp.blue))
+ 		self.__editEdge.hide()
+ 		self.__draw.redrawing()

@@ -107,6 +107,12 @@ class Edge:
 	def get_connection(self):
 		"""Obtiene la Coneccion de la Arista"""
 		return self.__connection
+		
+	def set_label(self, newWeight):
+		self.__weight = newWeight
+	
+	def get_label(self):
+		return self.__weight
 	
 class Graph:
 
