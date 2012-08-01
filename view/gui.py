@@ -34,6 +34,7 @@ class Ui:
 		self.__menuAlert = self.__loader.get_object("algoritmos")
 		self.__printWindow = self.__loader.get_object("printdialog")
 		self.__pageSetup = self.__loader.get_object("pagesetupdialog")
+		self.__defineType = self.__loader.get_object("tipo-grafo")
 		self.__draw = designer.Designer(self.__darea, graph)
 	
 	def connect_signals(self,controller):
@@ -41,7 +42,7 @@ class Ui:
 
 	def show_elements(self):
 		self.__mainWindow.show()
-		#self.__defineType.show()
+		self.__defineType.show()
 	
 	def change_operation(self, opId):
 		self.__draw.set_status(opId)
@@ -72,8 +73,7 @@ class Ui:
 			self.__exportWindow.set_action(Gtk.FileChooserAction.SELECT_FOLDER)
 		else:
 			self.__formatExport = self.__loader.get_object("formato").get_active_text()
-			print self.__direction + self.__formatExport
-			#print self.__direction
+			print self.__formatExport
 			self.__draw.create_file(self.__direction, self.__formatExport)
 			self.__exportWindow.hide()
 		
@@ -87,7 +87,7 @@ class Ui:
 		self.__draw.insert_new_node(data)
 
 	def get_over_node(self,data):
-		return self.__draw.get_node((data.x,data.y))
+		return self.__draw.get_node(data.x,data.y)
 
 	def get_draw_status(self):
 		return self.__draw.get_status()
@@ -131,8 +131,9 @@ class Ui:
 		self.__draw.reset()
 
 	def show_label(self):
-		self.__labelWindow.show()
 		self.__labelText = self.__loader.get_object("label-nodo")
+		self.__labelText.set_text(str(self.__tmp.get_label()))
+		self.__labelWindow.show()
 
 	def set_new_label(self):
 		self.__tmp.set_label(self.__labelText.get_text())
@@ -157,7 +158,6 @@ class Ui:
 	def del_nodo(self, grafo):
 		pos = grafo.get_position_node(self.__tmp.get_id())
 		grafo.del_node(self.__tmp.get_id())
-		self.__draw.redrawing()
 		return pos
 
 	def del_edge(self, grafo):
@@ -192,11 +192,11 @@ class Ui:
  
  	def show_tamanio(self):
  		self.__tamanio = self.__loader.get_object("get-tam")
- 		self.__tamanio.set_text(str(self.__tmp.get_tam()))
+ 		self.__tamanio.set_text(str(self.__tmp.get_size()))
  		self.__menuTamanio.show()
 
  	def set_tamanio(self):
- 		self.__tmp.set_tam(float(self.__tamanio.get_text()))
+ 		self.__tmp.set_size(float(self.__tamanio.get_text()))
  		self.__draw.redrawing()
  		self.__tamanio.set_text("")
  		self.__menuTamanio.hide()
@@ -244,26 +244,38 @@ class Ui:
  			for i in papelera:
  				self.__draw.paste_node((i.get_position()[0], i.get_position()[1]+25), i.get_label(), i.get_color(), i.get_tam(), i.get_form())
 
- 	def show_matriz(self, datos):
+ 	def show_matriz(self, datos, grafo):
  		dim = datos.get_nodes()
  		matrix = datos.get_matrix()
- 		self.__bufferText = self.__loader.get_object("matrix")
- 		text = ""
- 		for i in range(dim):
- 			align = Gtk.Alignment(xalign=0.0)
- 			label = Gtk.Label(str(i))
- 			self.__bufferText.attach(label,i,0,10, 10)
- 		text = text + "\n"
- 		for i in range(dim):
-
- 			text = text + str(i) + " "
- 			for j in range(dim):
- 				text = text + str(matrix[i][j]) + " - "
- 			text = text + "\n"
- 		print text
+ 		self.__boxer = self.__loader.get_object("boxer")
+ 		self.__bufferText = Gtk.Grid()
+ 		self.__bufferText.set_row_spacing(dim)
+ 		self.__bufferText.set_column_spacing(dim)
+ 		for i in xrange(dim):
+ 			if str(grafo.get_node_for_position(i).get_label()) == "new":
+ 				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label())+"-"+str(i))
+ 			else:
+ 				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label()))
+ 			label.show()
+ 			self.__bufferText.attach(label,i+2,1,1, 1)
+ 		for i in xrange(dim):
+ 			if str(grafo.get_node_for_position(i).get_label()) == "new":
+ 				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label())+"-"+str(i))
+ 			else:
+ 				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label()))
+ 			label.show()
+ 			self.__bufferText.attach(label, 1, i+3, 1,1)
+ 			for j in xrange(dim):
+ 				label = Gtk.Label(str(matrix[i][j]))
+ 				label.show()
+ 				self.__bufferText.attach(label, j+2, i+3, 1,1)	
+ 		self.__boxer.pack_start(self.__bufferText, True, True, 0)
+ 		self.__boxer.reorder_child(self.__bufferText, 1) 
+ 		self.__bufferText.show() 		
  		self.__menuMatriz.show()
 
- 	def hide_matriz(self):
+ 	def hide_matriz(self, datos):
+ 		self.__bufferText.destroy()
  		self.__menuMatriz.hide()
 
  	def show_algoritmo(self, string, option):
@@ -309,3 +321,11 @@ class Ui:
  	
  	def get_draw(self):
  		return self.__draw
+ 		
+ 	def set_type(self):
+ 		if self.__loader.get_object("type").get_active_text() == "Dirigido":
+ 			self.__defineType.hide()
+ 			return True
+ 		else:
+ 			self.__defineType.hide()
+ 			return False

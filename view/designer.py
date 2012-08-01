@@ -22,6 +22,7 @@ class Designer:
 		self.__selected = 0
 		self.__tmpSelection = None
 		self.__temp = []
+		self.__edges = []
 		self.__frameInicio = (0,0) 
 		self.__frameFinal = (0,0)
 		self.__deltaI = (0,0)
@@ -38,10 +39,13 @@ class Designer:
 		self.__drawArea.add_events(Gdk.EventMask.BUTTON1_MOTION_MASK)
 		self.__drawArea.add_events(Gdk.EventMask.BUTTON_RELEASE_MASK)
 	
-	def __draw(self, printer = False):
+	def __draw(self, pdf = False, printer = False):
 		"""Dibuja en Pantalla o en Archivo el Grafo que se esta Creando"""
-		self.__sf=cairo.ImageSurface(cairo.FORMAT_ARGB32,740,500)
-		print "waka"
+		if pdf == True:
+			self.__drawArea.queue_draw()
+			self.__sf = cairo.PDFSurface(self.__folder + self.__format,740,500)
+		else:
+			self.__sf=cairo.ImageSurface(cairo.FORMAT_ARGB32,740,500)
 		if printer == False:
 			self.__cntx = cairo.Context(self.__sf)
 		self.__cntx.set_source_rgb(1,1,1)
@@ -70,7 +74,7 @@ class Designer:
 			if i.get_shape() == 4: 
 				self.__cntx.set_dash([i.get_size(),i.get_size()], 2);
 				self.__cntx.line_to(tmpx2,tmpy2)	
-			if i.get_directed() == True:
+			if self.__graph.get_type() == True:
 				#self.__cntx.move_to((tmpx1+tmpx2)/2, (tmpy1+tmpy2)/2)
 				arrow_len = i.get_size()+30
 				angle = math.atan2(tmpy2 - tmpy1, tmpx2 - tmpx1) + math.pi
@@ -87,7 +91,7 @@ class Designer:
 				self.__cntx.move_to((x2+x1)/2, (y2+y1)/2)
 			else:
 				self.__cntx.move_to(((tmpx1+tmpx2)/2)+i.get_size()+10,((tmpy1+tmpy2)/2)+i.get_size()+10)
-			self.__cntx.show_text(str(i.get_label()))
+			self.__cntx.show_text(str(i.get_weight()))
 			self.__cntx.stroke()
 		for i in self.__graph.get_nodes():
 			self.__cntx.set_source_rgb(i.get_color()[0], i.get_color()[1], i.get_color()[2])
@@ -100,7 +104,7 @@ class Designer:
 			self.__cntx.move_to(i.get_position()[0]+i.get_size(),i.get_position()[1]-i.get_size())
 			self.__cntx.show_text(i.get_label())
 		if self.__selected == 2:
-			self.__cntx.set_source_rgba( 0, 255, 0.3)
+			self.__cntx.set_source_rgba(0, 0, 255, 0.3)
 			self.__change_delta()
 			tmpx = self.__frameFinal[0] - self.__frameInicio[0]
 			tmpy = self.__frameFinal[1] - self.__frameInicio[1]
@@ -119,7 +123,7 @@ class Designer:
 				if x >= i.get_position()[0]-i.get_size()/2 and x <= i.get_position()[0]+i.get_size()/2:
 					if y >= i.get_position()[1]-i.get_size()/2 and y <= i.get_position()[1]+i.get_size()/2:
 						return i
-		return None
+		return False
 
 	def __over_select(self):
 		"""Agrega a una Lista todos los nodos que estan sobre un Area Seleccionada"""
@@ -160,11 +164,12 @@ class Designer:
 			aux = w
 			w = x
 			x = aux
-		aux = z
-		z = y
-		y = aux
+		if z < y:
+			aux = z
+			z = y
+			y = aux
 		self.__frameInicio = (x,y)
-		self.__frameFinal = (w,z) 	
+		self.__frameFinal = (w,z)	
 	
 	#
 	#  PUBLIC METHODS
@@ -192,7 +197,7 @@ class Designer:
 		y si no se esta seleccionando (0)"""
 		return self.__selected
 	
-	def set_malla(self):
+	def set_malla(self, newState):
 		"""Asigna a Designer si en la vista se quiere ver una malla de Ayuda en el Dibujo
 		TRUE or FALSE"""
 		self.__net = newState
@@ -201,10 +206,10 @@ class Designer:
 		"""Funcion que setea el punto de inicio del area de seleccion
 		y ademas sirve para obtener el punto de inicio del delta de Movimiento"""
 		if self.__selected == 0:
-			self.__frameInicio = self.__drawArea.get_pointer()
+			self.__frameInicio = (data.x,data.y)
 			self.__selected = 2
 		if self.__selected == 1:
-			self.__deltaI = self.__drawArea.get_pointer()
+			self.__deltaI = (data.x,data.y)
 
 	def select_area_end(self):
 		"""Funcion que setea el punto final del area de seleccion"""
@@ -218,6 +223,7 @@ class Designer:
 		self.__selected = 0
 		self.__tmpSelection = None
 		del self.__temp[:]
+		del self.__edges[:]
 	
 	def move_node(self, data=None):
 		"""Funcion que mueve un Nodo Seleccionado"""
@@ -230,7 +236,7 @@ class Designer:
 		"""Funcion que mueve todos los Nodos que se encuentran en un Area Seleccionada"""
 		if self.__selected == 1:
 			if self.__tmpSelection == None:
-				self.__over_select()
+				self.get_all_over_select()
 				self.__tmpSelection = True
 			self.__selectMove(data)
 			self.__drawArea.queue_draw()
@@ -260,10 +266,12 @@ class Designer:
 		self.__folder = direction
 		self.__format = format
 		if(format == '.pdf'):
-			self.__sf = cairo.PDFSurface(self.__folder + self.__format,740,500)	
+			self.__draw(True)	
 		if(format == '.png'):
+			self.__drawArea.queue_draw()
 			self.__sf.write_to_png(self.__folder + self.__format)
 		if(format == '.jpg' or format == '.gif'):
+			self.__drawArea.queue_draw()
 			self.__sf.write_to_png("tmp.png")
 			Image.open("tmp.png").convert("RGB").save(self.__folder + self.__format)
 
@@ -290,13 +298,26 @@ class Designer:
 			
 	def set_data(self):	
 		self.__frameFinal = self.__drawArea.get_pointer()
-		self.__drawArea.queue_draw()		
+		self.__drawArea.queue_draw()	
 	
 	def draw_extern(self, surface):
 		self.__cntx = surface
-		self.__draw(False, False, False, False, True)
+		self.__draw(False, True)
 		return self.__cntx
 
 	def set_graph(self, newGraph):
 		self.__graph = newGraph
 		self.__drawArea.queue_draw()
+	
+	def get_all_over_select(self):
+		self.__over_select()
+		for i in xrange(len(self.__temp)):
+			for j in xrange(len(self.__temp)):
+				tmp = self.__graph.get_edge((self.__temp[i].get_id(), self.__temp[j].get_id()))
+				if tmp != False:
+					self.__edges.append(tmp)
+		print "dimension:", len(self.__edges)
+			
+	def get_list_selected(self):
+		return self.__temp, self.__edges
+		

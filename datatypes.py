@@ -53,7 +53,7 @@ class Node:
 		
 	def set_position(self, newPosition):
 		"""Modifica la Posicion del Nodo"""
-		self.__size = newSize
+		self.__position = newPosition
 	
 	def get_position(self):
 		"""Obtiene la Posicion del Nodo"""
@@ -90,7 +90,7 @@ class Edge:
 	
 	def get_weight(self):
 		"""Obtiene el peso de la Arista"""
-		return self.__label
+		return self.__weight
 	
 	def set_size(self, newSize):
 		"""Modifica el Grosor de la Arista"""
@@ -114,6 +114,7 @@ class Graph:
 		"""Constructor del Grafo, genera una Lista de nodos y de Arcos"""
 		self.__nodes = []
 		self.__edges = []
+		self.__type = False
 	
 	def new_node(self, pos):
 		"""Inserta un nuevo Nodo en el Grafo, recibe el ID, Etiqueta y la Posicion (x,y)"""
@@ -136,12 +137,17 @@ class Graph:
 	
 	def del_node(self, idTarget):
 		"""Elimina un Nodo del grafo por su ID"""
+		cont = 0
 		for i in self.__nodes:
 			if i.get_id() == idTarget:
+				self.__nodes.remove(i)
 				for j in self.__edges:
 					if j.get_connection()[0] == idTarget or j.get_connection()[1] == idTarget:
-						self.__edges.remove(j)
-				self.__nodes.remove(i)
+						cont += 1
+				for i in xrange(cont):
+					for j in self.__edges:
+						if j.get_connection()[0] == idTarget or j.get_connection()[1] == idTarget:
+							self.__edges.remove(j)
 
 	def del_edge(self, connection):
 		"""Elimina una Arista del Grafo por su Conexion"""
@@ -155,6 +161,13 @@ class Graph:
 			if idTarget == i.get_id():
 				return i
 		
+	def get_edge(self, connection):
+		"""Obtiene una Arista determinada por su Conexion"""
+		for i in self.__edges:
+			if i.get_connection() == connection:
+				return i
+		return False	
+		
 	def exist_edge(self, connection):
 		"""Verifica si existe una Arista que Une a 2 Nodos (Conexion) en el Grafo"""
 		for i in self.__edges:
@@ -164,13 +177,21 @@ class Graph:
 	
 	def get_position_node(self, idTarget):
 		"""Obtiene la Posicion de un Nodo por su ID"""
-		for i in xrange(self.__nodes):
+		for i in xrange(len(self.__nodes)):
 			if self.__nodes[i].get_id() == idTarget:
 				return i
 	
 	def get_position_edge(self, connection):
 		"""Obtiene la Posicion de una arista por su conection"""
-		for i in xrange(self.__edges):
+		for i in xrange(len(self.__edges)):
 			if self.__edges[i].get_connection() == connection:
 				return i
+				
+	def get_type(self):
+		return self.__type
+		
+	def set_type(self, newType):
+		self.__type = newType
 	
+	def get_node_for_position(self, position):
+		return self.__nodes[position]

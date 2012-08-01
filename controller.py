@@ -6,11 +6,11 @@ class Controller:
 	"""Controlador del Sistema"""
 	def __init__(self):
 		self.__viewGraph = datatypes.Graph()
+		self.__viewGraph.set_type(True)
 		self.__modelGraph = graph.Graph(0)
 		self.__view = gui.Ui(self.__viewGraph)
 		self.__view.connect_signals(self)
 		self.__areaSel = False
-		self.__typeGraph = False
 		self.__tmp = None 		#Variable Temporal que se utiliza para la arista
 	
 	#
@@ -28,7 +28,7 @@ class Controller:
 			origin = edges[i].connections[0]
 			dest = edges[i].connections[1]
 			weight = edges[i].weight
-			if g.get_directed():
+			if self.__viewGraph.get_type():
 				new.set_edge_dir(origin, dest, weight)
 			else:
 				new.set_edge_ndir(origin, dest, weight)
@@ -111,7 +111,7 @@ class Controller:
 					self.__tmp = self.__view.get_over_node(data)
 				else:
 					other = self.__view.get_over_node(data)
-					if other == None:
+					if other == None or self.__tmp.get_id() == other.get_id():
 						self.__tmp = None
 					else:
 						#self.__redo_stack.push(self.__view.get_draw_graph())
@@ -119,7 +119,7 @@ class Controller:
 						self.__viewGraph.new_edge(connection)
 						posi = self.__viewGraph.get_position_node(self.__tmp.get_id())
 						posd = self.__viewGraph.get_position_node(other.get_id())
-						if self.__typeGraph:
+						if self.__viewGraph.get_type():
 							self.__modelGraph.add_edge_dir(posi, posd, 1)
 						else:
 							self.__modelGraph.add_edge_ndir(posi,posd, 1)
@@ -151,11 +151,10 @@ class Controller:
 		if self.__view.get_draw_status() == 3:
 			return True
 		if self.__view.get_draw_status() == 4:
-			if self.__areaSel == True:
+			if self.__areaSel:
 				self.__view.move_selected(data)
 			else:
 				self.__view.set_data()
-		self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def option_released(self, data = None):
 		if self.__view.get_draw_status() == 1:
@@ -173,13 +172,14 @@ class Controller:
 
 	def del_nodo(self, widget, data = None):
 		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph())
-		pos = self.__view.del_nodo(grafo) 
+		pos = self.__view.del_nodo(self.__viewGraph) 
+		print pos
 		self.__modelGraph.del_node(pos)
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def del_edge(self, widget, data = None):
 		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
-		ni, nf = self.__view.del_edge(grafo)
+		ni, nf = self.__view.del_edge(self.__viewGraph)
 		self.__modelGraph.del_edge(ni,nf)
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
@@ -253,7 +253,14 @@ class Controller:
 		self.__view.hide_forma_arista()
 
 	def show_matriz(self, widget, data=None):
-		self.__view.show_matriz(self.__graph)
-
+		self.__view.show_matriz(self.__modelGraph, self.__viewGraph)
+	
+	def set_type(self, widget, data=None):
+		self.__viewGraph.set_type(self.__view.set_type())
+		
+	def hide_matriz(self, widget, data=None):
+		self.__view.hide_matriz(self.__modelGraph)
+	
+		
 a = Controller()
 a.throw_app()
