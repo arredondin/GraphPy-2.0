@@ -498,7 +498,7 @@ class Graph:
 		"""Determina un camino que recorre todos los nodos
 		Retorna el camino"""
 		dim = self.get_nodes()
-		if not self.connected():
+		if not self.connected()[0]:
 			return None
 		temp = []
 		path = []
@@ -513,7 +513,7 @@ class Graph:
 		"""Determina un camino/ciclo euleriano, en caso de que exista
 		Retorna 'None' si no existe. Retorna el resultado de __fleury en otro caso"""
 		dim = self.get_nodes()
-		if not self.connected():
+		if not self.connected()[0]:
 			return None
 		
 		oddCounter = []
