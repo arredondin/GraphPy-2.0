@@ -45,19 +45,19 @@ class Controller:
 		self.__view.stop_ui()
 	
 	def on_cursor(self, widget,data=None): #Accede al Cursor
-		self.__view.change_operation(2)
+		self.__view.change_operation(2, "Cursor")
 		self.__areaSel = False
 	
 	def on_node(self,widget,data=None): #Accede a Crear el Nodo
-		self.__view.change_operation(1)
+		self.__view.change_operation(1, "Crear Nodos")
 		self.__areaSel = False
 	
 	def on_add_edge(self, widget, data=None): #Accede a Crear el Arco
-		self.__view.change_operation(3)
+		self.__view.change_operation(3, "Crear Arista")
 		self.__areaSel = False
 	
 	def on_select(self, widget, data=None): #Accede a Seleccion
-		self.__view.change_operation(4)
+		self.__view.change_operation(4, "Seleccionar Area")
 		self.__areaSel = False
 
 	def on_to_pdf(self, widget, data=None):
@@ -188,12 +188,20 @@ class Controller:
 		self.__view.set_coordenates()
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
-	def show_label(self, widget, data = None):
-		self.__view.show_label()
+	def show_label_node(self, widget, data = None):
+		self.__view.show_label_node()
+	
+	def show_label_edge(self, widget, data = None):
+		self.__view.show_label_edge()
 
-	def set_label(self, widget, data = None):
+	def set_label_node(self, widget, data = None):
 		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
-		self.__view.set_new_label()
+		self.__view.set_new_label_node()
+		self.__view.get_draw().set_graph(self.__viewGraph)
+		
+	def set_label_edge(self, widget, data = None):
+		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+		self.__view.set_new_label_edge(self.__modelGraph, self.__viewGraph)
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def set_tamanio(self, widget, data=None):
@@ -261,6 +269,50 @@ class Controller:
 	def hide_matriz(self, widget, data=None):
 		self.__view.hide_matriz(self.__modelGraph)
 	
+	def show_all_node(self, widget, data=None):
+		self.__view.show_all_node(self.__viewGraph)
 		
+	def set_all_node(self, widget, data=None):
+		self.__view.set_all_node(self.__viewGraph)
+	
+	def show_list_node(self, widget, data=None):
+		self.__view.show_list_node(self.__viewGraph)
+	
+	def show_list_edge(self, widget, data=None):
+		self.__view.show_list_edge(self.__viewGraph)
+	
+	def show_all_edge(self, widget, data=None):
+		self.__view.show_all_edge(self.__viewGraph)
+		
+	def set_all_edge(self, widget, data=None):
+		self.__view.set_all_edge(self.__viewGraph)
+		
+	def hide_alert(self, widget, data=None):
+		self.__view.hide_alert()
+	
+	def show_directed(self, widget, data=None):
+		self.__view.show_directed(self.__modelGraph)
+	
+	def show_grades(self, widget, data=None):
+		self.__view.show_grades(self.__modelGraph)
+		
+	def show_complete(self, widget, data=None):
+		self.__view.show_complete(self.__modelGraph)
+	
+	def show_bipartite(self, widget, data=None):
+		self.__view.show_bipartite(self.__modelGraph)
+	
+	def show_connected(self, widget, data=None):
+		self.__view.show_connected(self.__modelGraph)
+	
+	def show_euler(self, widget, data=None):
+		self.__view.show_euler(self.__modelGraph, self.__viewGraph)
+	
+	def show_hamilton(self, widget, data=None):
+		self.__view.show_hamilton(self.__modelGraph, self.__viewGraph)
+	
+	def show_dijkstra(self, widget, data=None):
+		self.__view.show_dijkstra(self.__modelGraph, self.__viewGraph)
+
 a = Controller()
 a.throw_app()
