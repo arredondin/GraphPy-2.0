@@ -345,7 +345,7 @@ class Graph:
 					continue
 				complete[i].append(1)
 		return complete
-		
+	
 	def color_graph(self):
 		"""Colorea un grafo con la minima cantidad de colores
 		Retorna una lista que contiene las listas de nodos del mismo color"""
@@ -430,7 +430,7 @@ class Graph:
 		Retorna 'True' si es completa, 'False' si no lo es"""
 		cantNodos = self.get_nodes()
 		for i in xrange(cantNodos):
-			if self.degree(i) != (cantNodos - 1):
+			if self.get_degree(i) != (cantNodos - 1):
 				return False
 		return True
 	
@@ -458,7 +458,7 @@ class Graph:
 						return False
 		return True
 	
-	def degree(self, node):
+	def get_degree(self, node):
 		"""Para un nodo 'node':
 		Retorna el grado del nodo. Si 'node' no es valido, retorna 'None'"""
 		matrix = self.get_matrix()
@@ -520,13 +520,13 @@ class Graph:
 		
 		oddCounter = []
 		for i in xrange(dim):
-			if self.degree(i)%2 == 1:
+			if self.get_degree(i)%2 == 1:
 				oddCounter.append(i)
 		
 		if len(oddCounter) != 0 and len(oddCounter) != 2 and self.__matrix.symmetry==False:
 			return None
 		if len(oddCounter) == 2:
-			if self.degree(oddCounter[0]) > self.degree(oddCounter[1]):
+			if self.get_degree(oddCounter[0]) > self.get_degree(oddCounter[1]):
 				start = oddCounter[0]
 			else:
 				start = oddCounter[1]
