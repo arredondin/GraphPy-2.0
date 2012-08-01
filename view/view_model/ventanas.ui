@@ -3,6 +3,7 @@
   <!-- interface-requires gtk+ 3.0 -->
   <object class="GtkWindow" id="algoritmos">
     <property name="can_focus">False</property>
+    <property name="type">popup</property>
     <property name="title" translatable="yes">Algortimos</property>
     <property name="resizable">False</property>
     <property name="window_position">mouse</property>
@@ -65,7 +66,6 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="use_action_appearance">False</property>
-            <signal name="clicked" handler="hide_algoritmos" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -78,7 +78,9 @@
   </object>
   <object class="GtkWindow" id="color">
     <property name="can_focus">False</property>
+    <property name="resizable">False</property>
     <property name="window_position">mouse</property>
+    <property name="deletable">False</property>
     <signal name="destroy" handler="hide_color" swapped="no"/>
     <child>
       <object class="GtkBox" id="box3">
@@ -135,6 +137,7 @@
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <property name="window_position">mouse</property>
+    <property name="deletable">False</property>
     <signal name="destroy" handler="hide_coordenates" swapped="no"/>
     <child>
       <object class="GtkBox" id="box8">
@@ -281,7 +284,6 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
-                <signal name="clicked" handler="on_destroyloader" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -388,6 +390,7 @@
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <property name="window_position">mouse</property>
+    <property name="deletable">False</property>
     <property name="has_resize_grip">False</property>
     <signal name="destroy" handler="hide_forma_nodo" swapped="no"/>
     <child>
@@ -459,6 +462,7 @@
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <property name="window_position">mouse</property>
+    <property name="deletable">False</property>
     <signal name="destroy" handler="hide_label" swapped="no"/>
     <child>
       <object class="GtkBox" id="box5">
@@ -572,9 +576,11 @@
   </object>
   <object class="GtkWindow" id="matriz">
     <property name="can_focus">False</property>
+    <property name="type">popup</property>
+    <property name="window_position">center</property>
     <property name="has_resize_grip">False</property>
     <child>
-      <object class="GtkBox" id="box18">
+      <object class="GtkBox" id="boxer">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
@@ -591,41 +597,22 @@
           </packing>
         </child>
         <child>
-          <object class="GtkGrid" id="matrix">
+          <placeholder/>
+        </child>
+        <child>
+          <object class="GtkButton" id="button8">
+            <property name="label" translatable="yes">Aceptar</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="use_action_appearance">False</property>
+            <signal name="clicked" handler="hide_matriz" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
@@ -1276,7 +1263,6 @@
                 <property name="use_action_appearance">False</property>
                 <property name="image">copy</property>
                 <property name="image_position">bottom</property>
-                <signal name="clicked" handler="copy_selected" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1313,7 +1299,6 @@
                 <property name="use_action_appearance">False</property>
                 <property name="image">paste</property>
                 <property name="image_position">bottom</property>
-                <signal name="clicked" handler="paste_selected" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1609,9 +1594,9 @@
       <action-widget response="0">close</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkWindow" id="show-nodes">
+  <object class="GtkWindow" id="show-all">
     <property name="can_focus">False</property>
-    <property name="role">Nodos</property>
+    <property name="role">all</property>
     <child>
       <object class="GtkBox" id="box19">
         <property name="visible">True</property>
@@ -1630,7 +1615,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkComboBoxText" id="lista_nodos">
+          <object class="GtkComboBoxText" id="listado">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="entry_text_column">0</property>
@@ -1739,6 +1724,10 @@
   </object>
   <object class="GtkWindow" id="tipo-grafo">
     <property name="can_focus">False</property>
+    <property name="type">popup</property>
+    <property name="resizable">False</property>
+    <property name="window_position">center</property>
+    <property name="deletable">False</property>
     <child>
       <object class="GtkBox" id="box20">
         <property name="visible">True</property>
@@ -1757,7 +1746,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkComboBoxText" id="comboboxtext1">
+          <object class="GtkComboBoxText" id="type">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="entry_text_column">0</property>
@@ -1781,6 +1770,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="use_action_appearance">False</property>
+            <signal name="clicked" handler="set_type" swapped="no"/>
           </object>
           <packing>
             <property name="expand">False</property>
