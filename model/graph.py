@@ -345,6 +345,49 @@ class Graph:
 					continue
 				complete[i].append(1)
 		return complete
+		
+	def color_graph(self):
+		"""Colorea un grafo con la minima cantidad de colores
+		Retorna una lista que contiene las listas de nodos del mismo color"""
+		lastColor = 2
+		matrix = self.get_matrix()
+		dim = self.get_nodes()
+		colored = []
+		for i in xrange(dim):
+			colored.append(0)
+		
+		for i in xrange(dim):
+			if colored[i] == 0:
+				colored[i] = 1
+			print 'comparando nodo  ', i
+			print 'colored inicial = ', colored
+			
+			count = 1
+			while count != 0 and i != 0:
+				for j in xrange(i): # comparar nodo actual con los anteriores
+					if matrix[i][j] != 0 and colored[i] == colored[j]:
+						if colored[i] == lastColor and count == 1:
+							colored[i] = 1
+						elif colored[i] == lastColor and count != 1:
+							print 'entre al IF DE LA MUERTE!'
+							lastColor += 1
+							colored[i] = lastColor
+						else:
+							colored[i] = 1
+						break
+				count += 1
+				if j == (i - 1):
+					count = 0
+			# end while
+			for j in xrange(i + 1,dim): # setear valores en los nodos siguientes
+				if matrix[i][j] != 0:
+					if colored[j] == 0 and colored[i] != lastColor:
+						colored[j] = colored[i] + 1
+					if colored[j] == 0 and colored[i] == lastColor:
+						colored[j] = 1
+					if colored[j] != 0 and colored[i] == colored[j]:
+						pass
+			print 'colored final = ', colored
 	
 	def directed(self):
 		"""Determina si el grafo es dirigido o no dirigido
@@ -356,24 +399,20 @@ class Graph:
 	def connected(self):
 		"""Determina, utilizando Busqueda en Profundidad, si el grafo es conexo o no
 		Retorna 'True' si es conexo, 'False' si no lo es"""
-	#	conexo (no dirigido)
 	#	fuertemente conexo (dirigido)
 	#	debilmente conexo (dirigido)
+	#	conexo (no dirigido)
 	#	no conexo (todos los casos)
 		matrix = self.__matrix.get_matrix()
 		if self.directed():
 			if self.__connected_matrix(matrix):
-				print 'strongly connected'
-				return True
+				return True, 'strongly connected'
 			matrix = self.__matrix.get_simmetric()
 			if self.__connected_matrix(matrix):
-				print 'weakly connected'
-				return True
+				return True, 'weakly connected'
 		if self.__connected_matrix(matrix):
-			print 'connected'
-			return True
-		print 'not connected'
-		return False
+			return True, 'connected'
+		return False, 'not connected'
 	
 	def weighted(self):
 		"""Determina si el grafo es ponderado o no
