@@ -161,6 +161,13 @@ class Graph:
 			if idTarget == i.get_id():
 				return i
 		
+	def get_edge(self, connection):
+		"""Obtiene una Arista determinada por su Conexion"""
+		for i in self.__edges:
+			if i.get_connection() == connection:
+				return i
+		return False	
+		
 	def exist_edge(self, connection):
 		"""Verifica si existe una Arista que Une a 2 Nodos (Conexion) en el Grafo"""
 		for i in self.__edges:

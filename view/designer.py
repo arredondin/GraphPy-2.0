@@ -22,6 +22,7 @@ class Designer:
 		self.__selected = 0
 		self.__tmpSelection = None
 		self.__temp = []
+		self.__edges = []
 		self.__frameInicio = (0,0) 
 		self.__frameFinal = (0,0)
 		self.__deltaI = (0,0)
@@ -222,6 +223,7 @@ class Designer:
 		self.__selected = 0
 		self.__tmpSelection = None
 		del self.__temp[:]
+		del self.__edges[:]
 	
 	def move_node(self, data=None):
 		"""Funcion que mueve un Nodo Seleccionado"""
@@ -234,7 +236,7 @@ class Designer:
 		"""Funcion que mueve todos los Nodos que se encuentran en un Area Seleccionada"""
 		if self.__selected == 1:
 			if self.__tmpSelection == None:
-				self.__over_select()
+				self.get_all_over_select()
 				self.__tmpSelection = True
 			self.__selectMove(data)
 			self.__drawArea.queue_draw()
@@ -306,3 +308,16 @@ class Designer:
 	def set_graph(self, newGraph):
 		self.__graph = newGraph
 		self.__drawArea.queue_draw()
+	
+	def get_all_over_select(self):
+		self.__over_select()
+		for i in xrange(len(self.__temp)):
+			for j in xrange(len(self.__temp)):
+				tmp = self.__graph.get_edge((self.__temp[i].get_id(), self.__temp[j].get_id()))
+				if tmp != False:
+					self.__edges.append(tmp)
+		print "dimension:", len(self.__edges)
+			
+	def get_list_selected(self):
+		return self.__temp, self.__edges
+		
