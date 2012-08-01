@@ -365,8 +365,6 @@ class Graph:
 		for i in xrange(dim):
 			if colored[i] == 0:
 				colored[i] = 1
-			print 'comparando nodo  ', i
-			print 'colored inicial = ', colored
 			
 			count = 1
 			while count != 0 and i != 0:
