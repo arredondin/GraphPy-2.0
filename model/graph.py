@@ -346,6 +346,12 @@ class Graph:
 				complete[i].append(1)
 		return complete
 	
+	def get_degree(self, node):
+		"""Para un nodo 'node':
+		Retorna el grado del nodo. Si 'node' no es valido, retorna 'None'"""
+		matrix = self.get_matrix()
+		return self.__generic_degree(node, matrix)
+	
 	def color_graph(self):
 		"""Colorea un grafo con la minima cantidad de colores
 		Retorna una lista que contiene las listas de nodos del mismo color"""
@@ -457,12 +463,6 @@ class Graph:
 					if colored[j] != 0 and colored[i] == colored[j]:
 						return False
 		return True
-	
-	def get_degree(self, node):
-		"""Para un nodo 'node':
-		Retorna el grado del nodo. Si 'node' no es valido, retorna 'None'"""
-		matrix = self.get_matrix()
-		return self.__generic_degree(node, matrix)
 	
 	#
 	#  PUBLIC METHODS - GRAPH ALGORITHMS
