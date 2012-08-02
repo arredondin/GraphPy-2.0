@@ -11,6 +11,8 @@ except:
 
 import designer
 import string
+import random
+import time
 
 class Ui:
 
@@ -173,6 +175,7 @@ class Ui:
 
 	def set_new_color(self):
 		tmp = self.__selectColor.get_current_rgba()
+		print tmp
 		self.__tmp.set_color((tmp.red, tmp.green, tmp.blue))
 		self.__draw.redrawing()
 		self.__menuColor.hide()
@@ -329,13 +332,11 @@ class Ui:
 			self.__loader.get_object("resultado").set_text("El Grafo no es Completo")
 		self.__menuAlert.show()
 	
-	def show_bipartite(self, grafo):
+	def show_bipartite(self, grafo, viewgraph):
 		self.__loader.get_object("titulo_algoritmo").set_text("Grafo Bipartito")
 		if grafo.bipartite():
 			self.__loader.get_object("resultado").set_text("El Grafo si es Bipartito")
-			#
-			#COLOREAR
-			#
+			self.colored(grafo, viewgraph)
 		else:
 			self.__loader.get_object("resultado").set_text("El Grafo no es Bipartito")
 		self.__menuAlert.show()
@@ -386,7 +387,28 @@ class Ui:
 					text = text + viewgraph.get_node_for_position(int(matrix[i][j])).get_label() + " - "
 				text = text + "\n"
 			self.__loader.get_object("resultado").set_text(text)
-		self.__menuAlert.show()		
+		self.__menuAlert.show()	
+		
+	def show_kruskal(self, grafo, viewgraph):
+		self.__loader.get_object("titulo_algoritmo").set_text("Algoritmo Kruskal")	
+		if grafo.kruskal() == None:
+			self.__loader.get_object("resultado").set_text("No Existe Arbol Recubridor Minimo para este Grafo")
+		else:
+			matrix = grafo.kruskal()
+			dim1 = len(matrix)
+			for i in xrange(dim1):
+				dim2 = len(matrix[i])
+				for j in xrange(dim2):
+					if matrix[i][j] != 0:
+						id1 = viewgraph.get_node_for_position(i).get_id()
+						id2 = viewgraph.get_node_for_position(j).get_id()
+						if viewgraph.get_edge((id1,id2)) != False:
+							viewgraph.get_edge((id1,id2)).set_color((0,0,1))
+						else:
+							viewgraph.get_edge((id2,id1)).set_color((0,0,1))
+			self.__loader.get_object("resultado").set_text("Arbol Recubridor Minimo Resaltado en Pantalla")
+ 		self.__draw.redrawing()
+ 		self.__menuAlert.show()
 	
 	def show_dijkstra(self, grafo, viewgraph):
 		self.__loader.get_object("titulo_algoritmo").set_text("Algoritmo Dijkstra")
@@ -411,7 +433,7 @@ class Ui:
 				text = text + "\n"
 			self.__loader.get_object("resultado").set_text(text)
 		self.__menuAlert.show()	
-				
+		
 	def hide_alert(self):
 		self.__menuAlert.hide()
 	
@@ -491,3 +513,17 @@ class Ui:
  		self.__tmp.set_color((tmp.red, tmp.green, tmp.blue))
  		self.__editEdge.hide()
  		self.__draw.redrawing()
+ 	
+ 	def colored(self, grafo, viewgraph):
+ 		array = grafo.color_graph()
+ 		dim1 = len(array)
+ 		color = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+ 		for i in xrange(dim1):
+ 			newcolor = (color[random.randint(0,9)], color[random.randint(0,9)], color[random.randint(0,9)])
+ 			print newcolor
+ 			dim2 = len(array[i])
+ 			for j in xrange(dim2):
+ 				tmp = viewgraph.get_node_for_position(int(array[i][j]))
+ 				tmp.set_color(newcolor)
+ 		self.__draw.redrawing()
+ 	

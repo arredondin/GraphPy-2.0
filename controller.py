@@ -1,6 +1,7 @@
-from model import graph #, algorithms
+from model import graph , algorithms
 from view import gui
 import datatypes
+import copy
 
 class Controller:
 	"""Controlador del Sistema"""
@@ -12,6 +13,9 @@ class Controller:
 		self.__view.connect_signals(self)
 		self.__areaSel = False
 		self.__tmp = None 		#Variable Temporal que se utiliza para la arista
+		
+		self.__undo_stack = algorithms.Actions()
+		self.__redo_stack = algorithms.Actions()
 	
 	#
 	#  PRIVATE METHODS
@@ -23,16 +27,15 @@ class Controller:
 		Retorna el nuevo grafo de model"""
 		nodes = self.__viewGraph.get_nodes()
 		edges = self.__viewGraph.get_edges()
-		new = graph.Graph( len(nodes) )
+		self.__modelGraph = graph.Graph( len(nodes) )
 		for i in xrange( len(edges) ):
 			origin = edges[i].connections[0]
 			dest = edges[i].connections[1]
 			weight = edges[i].weight
 			if self.__viewGraph.get_type():
-				new.set_edge_dir(origin, dest, weight)
+				self.__modelGraph.set_edge_dir(origin, dest, weight)
 			else:
-				new.set_edge_ndir(origin, dest, weight)
-		return new
+				self.__modelGraph.set_edge_ndir(origin, dest, weight)
 		
 	#
 	#  PUBLIC METHODS
@@ -81,23 +84,27 @@ class Controller:
 	def on_click_released(self, widget, data=None):
 		self.option_released(data)
 
-	"""	def on_redo(self,widget,data=None):
+	def on_redo(self,widget,data=None):
 		tmp = self.__redo_stack.pop()
 		print "deshaciendo en redo con grafo igual a ",tmp
 		if tmp is not None:
-			self.__undo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
-			self.__view.set_draw_graph(copy.deepcopy(tmp))
+			self.__undo_stack.push(copy.deepcopy(self.__viewGraph))
+			self.__viewGraph= copy.deepcopy(tmp)
+			self.__set_graph()
+			self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def on_undo(self, widget, data=None):
 		tmp = self.__undo_stack.pop()
 		if tmp is not None:
-			self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
-			self.__view.set_draw_graph(copy.deepcopy(tmp))  """
+			self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+			self.__viewGraph = copy.deepcopy(tmp)
+			self.__set_graph()
+			self.__view.get_draw().set_graph(self.__viewGraph)
 	
 	def option_clicked(self, data = None):
 		if self.__view.get_draw_status() == 1:
 			if data.button == 1:
-				#self.__redo_stack.push(self.__view.get_draw_graph())
+				self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 				self.__viewGraph.new_node(data)
 				self.__modelGraph.add_node()
 
@@ -111,19 +118,22 @@ class Controller:
 					self.__tmp = self.__view.get_over_node(data)
 				else:
 					other = self.__view.get_over_node(data)
-					if other == None or self.__tmp.get_id() == other.get_id():
+					if self.__tmp.get_id() == other.get_id():
 						self.__tmp = None
 					else:
-						#self.__redo_stack.push(self.__view.get_draw_graph())
-						connection = (self.__tmp.get_id(), other.get_id())	
-						self.__viewGraph.new_edge(connection)
-						posi = self.__viewGraph.get_position_node(self.__tmp.get_id())
-						posd = self.__viewGraph.get_position_node(other.get_id())
-						if self.__viewGraph.get_type():
-							self.__modelGraph.add_edge_dir(posi, posd, 1)
+						if other == None:
+							self.__tmp = None
 						else:
-							self.__modelGraph.add_edge_ndir(posi,posd, 1)
-						self.__tmp = None			
+							self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+							connection = (self.__tmp.get_id(), other.get_id())	
+							self.__viewGraph.new_edge(connection)
+							posi = self.__viewGraph.get_position_node(self.__tmp.get_id())
+							posd = self.__viewGraph.get_position_node(other.get_id())
+							if self.__viewGraph.get_type():
+								self.__modelGraph.add_edge_dir(posi, posd, 1)
+							else:
+								self.__modelGraph.add_edge_ndir(posi,posd, 1)
+							self.__tmp = None			
 
 		if self.__view.get_draw_status() == 4:
 			if data.button == 1:
@@ -166,25 +176,25 @@ class Controller:
 		if self.__view.get_draw_status() == 4:
 			if data.button == 1:
 				if self.__view.get_draw_selected() == 2:
-					#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+					self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 					self.__areaSel = self.__view.select_area_end()
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def del_nodo(self, widget, data = None):
-		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph())
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		pos = self.__view.del_nodo(self.__viewGraph) 
 		print pos
 		self.__modelGraph.del_node(pos)
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def del_edge(self, widget, data = None):
-		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		ni, nf = self.__view.del_edge(self.__viewGraph)
 		self.__modelGraph.del_edge(ni,nf)
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def set_coordenates(self, widget, data=None):
-		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.set_coordenates()
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
@@ -195,17 +205,17 @@ class Controller:
 		self.__view.show_label_edge()
 
 	def set_label_node(self, widget, data = None):
-		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.set_new_label_node()
 		self.__view.get_draw().set_graph(self.__viewGraph)
 		
 	def set_label_edge(self, widget, data = None):
-		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.set_new_label_edge(self.__modelGraph, self.__viewGraph)
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def set_tamanio(self, widget, data=None):
-		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.set_tamanio()
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
@@ -219,17 +229,17 @@ class Controller:
 		self.__view.hide_color()
 
 	def set_color(self, widget, data = None):
-		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.set_new_color()
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def set_forma_nodo(self, widget, data=None):
-		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.set_forma_nodo()
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
 	def set_forma_arista(self, widget, data=None):
-		#self.__redo_stack.push(copy.deepcopy(self.__view.get_draw_graph()))
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.set_forma_arista()
 		self.__view.get_draw().set_graph(self.__viewGraph)
 
@@ -273,6 +283,7 @@ class Controller:
 		self.__view.show_all_node(self.__viewGraph)
 		
 	def set_all_node(self, widget, data=None):
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.set_all_node(self.__viewGraph)
 	
 	def show_list_node(self, widget, data=None):
@@ -285,6 +296,7 @@ class Controller:
 		self.__view.show_all_edge(self.__viewGraph)
 		
 	def set_all_edge(self, widget, data=None):
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.set_all_edge(self.__viewGraph)
 		
 	def hide_alert(self, widget, data=None):
@@ -300,7 +312,8 @@ class Controller:
 		self.__view.show_complete(self.__modelGraph)
 	
 	def show_bipartite(self, widget, data=None):
-		self.__view.show_bipartite(self.__modelGraph)
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+		self.__view.show_bipartite(self.__modelGraph, self.__viewGraph)
 	
 	def show_connected(self, widget, data=None):
 		self.__view.show_connected(self.__modelGraph)
@@ -313,6 +326,14 @@ class Controller:
 	
 	def show_dijkstra(self, widget, data=None):
 		self.__view.show_dijkstra(self.__modelGraph, self.__viewGraph)
+	
+	def show_kruskal(self, widget, data=None):
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+		self.__view.show_kruskal(self.__modelGraph, self.__viewGraph)
+	
+	def colored(self, widget, data=None):
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+		self.__view.colored(self.__modelGraph, self.__viewGraph)
 
 a = Controller()
 a.throw_app()
