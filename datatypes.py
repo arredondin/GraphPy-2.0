@@ -94,7 +94,7 @@ class Edge:
 	
 	def set_size(self, newSize):
 		"""Modifica el Grosor de la Arista"""
-		self.__wide = newSize
+		self.__size = newSize
 	
 	def get_size(self):
 		"""Obtiene el Grosor de la Arista"""

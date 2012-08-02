@@ -154,7 +154,7 @@ class Ui:
 		self.__draw.redrawing()
 		self.__labelText.set_text("")
 		self.__labelWindow.hide()
-		self.__tmp = None
+		self.__tmp = False
 		self.__draw.reset()
 
 	def set_new_label_edge(self, grafo, viewgraph):
@@ -166,7 +166,7 @@ class Ui:
 		self.__draw.redrawing()
 		self.__sizeText.set_text("")
 		self.__sizeWindow.hide()
-		self.__tmp = None
+		self.__tmp = False
 		self.__draw.reset()
 
 	def show_color(self):
@@ -179,7 +179,7 @@ class Ui:
 		self.__tmp.set_color((tmp.red, tmp.green, tmp.blue))
 		self.__draw.redrawing()
 		self.__menuColor.hide()
-		self.__tmp = None
+		self.__tmp = False
 		self.__draw.reset()
 
 	def del_nodo(self, grafo):
@@ -214,7 +214,7 @@ class Ui:
 		self.__coord_x.set_text("")
 		self.__coord_y.set_text("")
 		self.__menuCoordenates.hide()
-		self.__tmp = None
+		self.__tmp = False
 		self.__draw.reset()
  
  	def show_tamanio(self):
@@ -227,7 +227,7 @@ class Ui:
  		self.__draw.redrawing()
  		self.__tamanio.set_text("")
  		self.__menuTamanio.hide()
- 		self.__tmp = None
+ 		self.__tmp = False
  		self.__draw.reset()
 
  	def show_forma_nodo(self):
@@ -241,7 +241,7 @@ class Ui:
  			self.__tmp.set_shape(2)
  		self.__draw.redrawing()
  		self.__menuFormaNodo.hide()
- 		self.__tmp = None
+ 		self.__tmp = False
  		self.__draw.reset()
 
  	def show_forma_arista(self):
@@ -259,7 +259,7 @@ class Ui:
  			self.__tmp.set_shape(4)
  		self.__draw.redrawing()
  		self.__menuFormaArista.hide()
- 		self.__tmp = None
+ 		self.__tmp = False
  		self.__draw.reset()
 
  	def copy_selected(self):
@@ -282,14 +282,14 @@ class Ui:
  			if str(grafo.get_node_for_position(i).get_label()) == "new":
  				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label())+"-"+str(i))
  			else:
- 				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label()))
+ 				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label())+"  ")
  			label.show()
  			self.__bufferText.attach(label,i+2,1,1, 1)
  		for i in xrange(dim):
  			if str(grafo.get_node_for_position(i).get_label()) == "new":
  				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label())+"-"+str(i))
  			else:
- 				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label()))
+ 				label = Gtk.Label(str(grafo.get_node_for_position(i).get_label())+"  ")
  			label.show()
  			self.__bufferText.attach(label, 1, i+3, 1,1)
  			for j in xrange(dim):
@@ -527,3 +527,19 @@ class Ui:
  				tmp.set_color(newcolor)
  		self.__draw.redrawing()
  	
+ 	def on_copy(self, viewgraph):
+ 		if self.__draw.get_status() == 4 and self.__draw.get_selected() == 1:
+ 			return self.__draw.get_list_selected()
+ 			
+ 	def set_new_position(self, nodes, edges):
+ 		for i in nodes:
+ 			i.set_position((i.get_position()[0]+20, i.get_position()[1]+20))
+ 			iD = i.get_id()
+ 			for j in edges:
+ 				if j.get_connection()[0] == iD:
+ 					tupla = j.get_connection()
+ 					j.set_connection((iD+100, tupla[1]))
+ 				if j.get_connection()[1] == iD:
+ 					tupla = j.get_connection()
+ 					j.set_connection((tupla[0], iD+100))
+ 			i.set_id(iD+100)
