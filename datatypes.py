@@ -186,12 +186,14 @@ class Graph:
 		for i in xrange(len(self.__nodes)):
 			if self.__nodes[i].get_id() == idTarget:
 				return i
+		return None
 	
 	def get_position_edge(self, connection):
 		"""Obtiene la Posicion de una arista por su conection"""
 		for i in xrange(len(self.__edges)):
 			if self.__edges[i].get_connection() == connection:
 				return i
+		return None
 				
 	def get_type(self):
 		return self.__type

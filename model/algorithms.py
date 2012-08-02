@@ -31,7 +31,7 @@ class Actions:
 	#  FILE MANAGEMENT
 	#
 
-
+"""
 from ..view import design
 
 class Files:
@@ -126,3 +126,4 @@ class Files:
 	#  DATA MANAGEMENT
 	#
 
+"""

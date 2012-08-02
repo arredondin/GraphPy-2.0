@@ -1337,7 +1337,7 @@
         <property name="use_action_appearance">False</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="tooltip_text" translatable="yes">Verifica si el Grafo es Bipartito y muestra en una Lista Separada los vértices</property>
+        <property name="tooltip_text" translatable="yes">Verifica si el Grafo es Bipartito y colorea el Grafo para identificar la división</property>
         <property name="label" translatable="yes">Ver Bipartito</property>
         <property name="use_underline">True</property>
         <signal name="activate" handler="show_bipartite" swapped="no"/>
@@ -1414,6 +1414,18 @@
         <property name="tooltip_text" translatable="yes">Permite encontrar un árbol recubridor mínimo en un grafo conexo y ponderado</property>
         <property name="label" translatable="yes">Aplicar Algoritmo Kruskal</property>
         <property name="use_underline">True</property>
+        <signal name="activate" handler="show_kruskal" swapped="no"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="colored">
+        <property name="use_action_appearance">False</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Colorea los nodos del Grafo</property>
+        <property name="label" translatable="yes">Colorear Grafo</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="colored" swapped="no"/>
       </object>
     </child>
   </object>
@@ -1860,6 +1872,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="image">image9</property>
                 <property name="image_position">bottom</property>
+                <signal name="clicked" handler="on_redo" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1878,6 +1891,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="image">image10</property>
                 <property name="image_position">bottom</property>
+                <signal name="clicked" handler="on_undo" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
