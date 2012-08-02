@@ -373,7 +373,7 @@ class Ui:
 	def show_hamilton(self, grafo, viewgraph):
 		self.__loader.get_object("titulo_algoritmo").set_text("Algoritmo Hamiltoniano")
 		if grafo.hamiltonian_paths() == None:
-			self.__loader.get_object("titulo_algoritmo").set_text("El Grafo No posee Caminos Hamiltonianos")
+			self.__loader.get_object("resultado").set_text("El Grafo No posee Caminos Hamiltonianos")
 		else:
 			matrix = grafo.hamiltonian_paths()
 			dim1 = len(matrix)
@@ -386,7 +386,45 @@ class Ui:
 				text = text + "\n"
 			self.__loader.get_object("resultado").set_text(text)
 		self.__menuAlert.show()	
+	
+	def draw_complement(self, grafo, viewgraph):
+		self.__loader.get_object("titulo_algoritmo").set_text("Grafo Completado")
+		if grafo.get_complementary() == None:
+			selfself.__loader.get_object("resultado").set_text("El Grafo No posee Complemento")
+		else:
+			matrix = grafo.get_complementary()
+			dim1 = len(matrix)
+			for i in xrange(dim1):
+				dim2 = len(matrix[i])
+				for j in xrange(dim2):
+					if matrix[i][j] != 0:
+						connection = (viewgraph.get_node_for_position(i).get_id(), viewgraph.get_node_for_position(j).get_id())
+						viewgraph.new_edge(connection)
+						viewgraph.get_edge(connection).set_color((0,0,1))
+						self.__loader.get_object("resultado").set_text("Se ha completado el grafo en Pantalla")
+ 		self.__draw.redrawing()
+ 		self.__menuAlert.show()
 		
+	def show_complement(self, grafo, viewgraph):
+		self.__loader.get_object("titulo_algoritmo").set_text("Complemento del Grafo")
+		if grafo.get_complementary() == None:
+			selfself.__loader.get_object("resultado").set_text("El Grafo No posee Complemento")
+		else:
+			matrix = grafo.get_complementary()
+			dim1 = len(matrix)
+			for i in xrange(dim1):
+				dim2 = len(matrix[i])
+				for j in xrange(dim2):
+					connection = (viewgraph.get_node_for_position(i).get_id(), viewgraph.get_node_for_position(j).get_id())
+					if matrix[i][j] != 0:
+						viewgraph.new_edge(connection)
+						viewgraph.get_edge(connection).set_color((0,0,1))
+					else:
+						viewgraph.del_edge(connection)
+		self.__loader.get_object("resultado").set_text("Se ha dibujado el Complemento en Pantalla")
+ 		self.__draw.redrawing()
+ 		self.__menuAlert.show()
+	
 	def show_kruskal(self, grafo, viewgraph):
 		self.__loader.get_object("titulo_algoritmo").set_text("Algoritmo Kruskal")	
 		if grafo.kruskal() == None:
@@ -552,3 +590,21 @@ class Ui:
  			for i in edges:
  				viewgraph.del_edge(i.get_connection())
  		self.__draw.set_graph(viewgraph)
+ 		
+ 	def show_dialog(self):
+ 		self.__aboutDialog = self.__loader.get_object("aboutdialog1").show()
+ 	
+ 	def hide_dialog(self):
+ 		self.__aboutDialog = self.__loader.get_object("aboutdialog1").hide()
+ 	
+ 	def align_graph(self, grafo):
+ 		dim1 = len(grafo.get_nodes())
+ 		for i in xrange(dim1):
+ 			j = 0
+ 			while j < 4:
+ 				if (i*4+j) < dim1:
+ 					grafo.get_nodes()[i*4+j].set_position(((100*(j+1)), (100*(i+1))))
+ 				j = j+1
+ 		self.__draw.set_graph(grafo)
+ 				
+ 		

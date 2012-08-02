@@ -328,6 +328,16 @@ class Controller:
 	def show_hamilton(self, widget, data=None):
 		self.__view.show_hamilton(self.__modelGraph, self.__viewGraph)
 	
+	def show_draw_complement(self, widget, data=None):
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+		self.__view.draw_complement(self.__modelGraph, self.__viewGraph)
+		self.__set_graph()
+	
+	def show_complement(self, widget, data=None):
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+		self.__view.show_complement(self.__modelGraph, self.__viewGraph)
+		self.__set_graph()
+	
 	def show_dijkstra(self, widget, data=None):
 		self.__view.show_dijkstra(self.__modelGraph, self.__viewGraph)
 	
@@ -368,6 +378,17 @@ class Controller:
 	def show_help(self, widget, data=None):
 		helpPop = help.HelpUi()
 		helpPop.throw_help() 
+	
+	def show_about(self, widget, data=None):
+		self.__view.show_dialog()
+	
+	def hide_about(self, widget, data=None):
+		self.__view.hide_dialog()
+	
+	def align_graph(self, widget, data=None):
+		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+		self.__view.align_graph(self.__viewGraph)
+		
 	
 a = Controller()
 a.throw_app()

@@ -128,7 +128,7 @@ class Graph:
 		self.__nodes.append(tmp)
 	
 	def new_edge(self, connection):
-		"""Inserta una Arista al Grafo, recibe el Peso de la arista y la Conexion 
+		"""Inserta una Arista al Grafo, recibe la Conexion 
 		(ID Nodo Origen, ID Nodo Destino)"""
 		tmpEdge = Edge(connection)
 		self.__edges.append(tmpEdge)
