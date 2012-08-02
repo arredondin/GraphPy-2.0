@@ -12,11 +12,13 @@ class Controller:
 		self.__view = gui.Ui(self.__viewGraph)
 		self.__view.connect_signals(self)
 		self.__areaSel = False
-		self.__tmp = None 		#Variable Temporal que se utiliza para la arista
+		self.__tmp = False 		#Variable Temporal que se utiliza para la arista
 		
 		self.__undo_stack = algorithms.Actions()
 		self.__redo_stack = algorithms.Actions()
-	
+		
+		self.__clipboard_nodes = []
+		self.__clipboard_edges = []
 	#
 	#  PRIVATE METHODS
 	#
@@ -29,13 +31,13 @@ class Controller:
 		edges = self.__viewGraph.get_edges()
 		self.__modelGraph = graph.Graph( len(nodes) )
 		for i in xrange( len(edges) ):
-			origin = edges[i].connections[0]
-			dest = edges[i].connections[1]
-			weight = edges[i].weight
+			origin = self.__viewGraph.get_position_node(edges[i].get_connection()[0])
+			dest = self.__viewGraph.get_position_node(edges[i].get_connection()[1])
+			weight = edges[i].get_weight()
 			if self.__viewGraph.get_type():
-				self.__modelGraph.set_edge_dir(origin, dest, weight)
+				self.__modelGraph.add_edge_dir(origin, dest, weight)
 			else:
-				self.__modelGraph.set_edge_ndir(origin, dest, weight)
+				self.__modelGraph.add_edge_ndir(origin, dest, weight)
 		
 	#
 	#  PUBLIC METHODS
@@ -114,15 +116,15 @@ class Controller:
 			
 		if self.__view.get_draw_status() == 3:
 			if data.button == 1:
-				if self.__tmp == None:
+				if self.__tmp == False:
 					self.__tmp = self.__view.get_over_node(data)
 				else:
 					other = self.__view.get_over_node(data)
-					if self.__tmp.get_id() == other.get_id():
-						self.__tmp = None
+					if other == False:
+						self.__tmp = False
 					else:
-						if other == None:
-							self.__tmp = None
+						if self.__tmp.get_id() == other.get_id():
+							self.__tmp = False
 						else:
 							self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 							connection = (self.__tmp.get_id(), other.get_id())	
@@ -133,7 +135,7 @@ class Controller:
 								self.__modelGraph.add_edge_dir(posi, posd, 1)
 							else:
 								self.__modelGraph.add_edge_ndir(posi,posd, 1)
-							self.__tmp = None			
+							self.__tmp = False			
 
 		if self.__view.get_draw_status() == 4:
 			if data.button == 1:
@@ -335,5 +337,12 @@ class Controller:
 		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.colored(self.__modelGraph, self.__viewGraph)
 
+	def on_copy(self, widget, data=None):
+		self.__clipboard_nodes, self.__clipboard_edges = self.__view.on_copy(self.__viewGraph)
+		self.__view.set_new_position(self.__clipboard_nodes, self.__clipboard_edges)
+
+	def on_paste(self, widget, data=None):
+		self.__view.paste_selected(self.__clipboard_nodes, self.__clipboard_edges)
+	
 a = Controller()
 a.throw_app()
