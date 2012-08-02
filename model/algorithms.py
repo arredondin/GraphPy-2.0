@@ -32,7 +32,6 @@ class Actions:
 	#
 
 """
-from ..view import design
 
 class Files:
 	def __init__(self, state=False,name):

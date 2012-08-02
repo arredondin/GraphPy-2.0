@@ -319,5 +319,7 @@ class Designer:
 		print "dimension:", len(self.__edges)
 			
 	def get_list_selected(self):
-		return copy.deecopy(self.__temp), copy.deecopy(self.__edges)
+		del self.__temp[:]
+		self.get_all_over_select()
+		return (copy.deepcopy(self.__temp), copy.deepcopy(self.__edges))
 		

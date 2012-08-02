@@ -1160,6 +1160,16 @@
     <property name="can_focus">False</property>
     <property name="pixbuf">_active_ Redo.ico</property>
   </object>
+  <object class="GtkImage" id="image11">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-copy</property>
+  </object>
+  <object class="GtkImage" id="image12">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-paste</property>
+  </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -1179,6 +1189,11 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="pixbuf">_active_ Remove (Delete).ico</property>
+  </object>
+  <object class="GtkImage" id="image7">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-cut</property>
   </object>
   <object class="GtkImage" id="image8">
     <property name="visible">True</property>
@@ -1691,42 +1706,34 @@
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem6">
-                        <property name="label">gtk-cut</property>
+                        <property name="label">Cortar</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem7">
-                        <property name="label">gtk-copy</property>
-                        <property name="use_action_appearance">False</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="image">image7</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_cut" swapped="no"/>
                       </object>
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem8">
-                        <property name="label">gtk-paste</property>
+                        <property name="label">Copiar</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="image">image11</property>
+                        <property name="use_stock">False</property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem9">
-                        <property name="label">gtk-delete</property>
+                      <object class="GtkImageMenuItem" id="menuitem1">
+                        <property name="label" translatable="yes">Pegar</property>
                         <property name="use_action_appearance">False</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
+                        <property name="image">image12</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_paste" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -1781,6 +1788,17 @@
                   <object class="GtkMenu" id="menu3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkMenuItem" id="manual-ayuda">
+                        <property name="use_action_appearance">False</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Accede a un manual de Ayuda para utilizar el Programa</property>
+                        <property name="label" translatable="yes">Manual de Ayuda</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="show_help" swapped="no"/>
+                      </object>
+                    </child>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem10">
                         <property name="label">gtk-about</property>
@@ -1910,6 +1928,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="image">copy</property>
                 <property name="image_position">bottom</property>
+                <signal name="clicked" handler="on_copy" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1928,6 +1947,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="image">cut</property>
                 <property name="image_position">bottom</property>
+                <signal name="clicked" handler="on_cut" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1946,6 +1966,7 @@
                 <property name="use_action_appearance">False</property>
                 <property name="image">paste</property>
                 <property name="image_position">bottom</property>
+                <signal name="clicked" handler="on_paste" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

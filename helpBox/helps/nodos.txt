@@ -1,0 +1,38 @@
+______
+
+NODOS:
+______
+
+Los Nodos correspondes a los vertices de los grafos, los cuales tienen 
+3 propiedades fundamentales:
+	1) Color
+	2) Forma
+	3) Etiqueta
+
+Para Modificar alguna de estas debe hacer click con el boton DERECHO abriendo
+un menu contextual donde podra modificar estas propiedades. Para mayor informacion
+deje el cursor del mouse sobre una opcion del menu y onbtendra ayuda.
+
+______
+
+Insertar Nuevo Nodo
+______
+
+Para insertar un nuevo nodo siga los siguientes paso:
+	1) Presione el boton "Nuevo Nodo" en el panel lateral.
+	2) Luego haga click en alguna parte de la estacion de trabajo y
+	   Aparecera un nuevo nodo.
+	3) Cuando haya creado una cantidad suficiente de nodos, presione el
+	   boton "Cursor" en la barra lateral para dejar de crear nodos.
+
+______
+
+Eliminar Nodo
+______
+
+Para poder eliminar un nodo del grafo solo basta con posicionar el mouse
+encima del nodo a eliminar y seguir los siguientes pasos:
+
+	1) Haga click con el boton derecho del mouse y se desplegara un menu
+	2) busque la opcion "Eliminar Nodo" para eliminar el nodo actual
+	3) repita 1) y 3) las veces que necesite.

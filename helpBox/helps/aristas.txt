@@ -1,0 +1,30 @@
+______
+
+ARISTAS:
+______
+
+Las aristas representas las conexiones entre los distintos nodos, las cuales
+tienen ciertas propiedades dependiendo del grafo con que se este trabajaando.
+Si es el caso de sel un DiGrafo, las aristas tendras un peso y una direccion,
+pero si se esta trabajando en un Grafo simple las aristas solo tendran peso.
+
+Ademas de estas propiedades se puedenn modifcar algunas de la visualizacion
+como el color, la forma y el grosor. Para modificar estas solo haga click con el 
+boton derecho del mouse sobre la arista y seleccione alguna opcion del menu contextual.
+
+
+
+
+______
+
+Nueva Arista:
+______
+
+Para crear una nueva arista siga los siguientes pasos:
+	1) Presione el boton "Insertar Arista"
+	2) luego haga click sobre el nodo origen
+	3) haga click sobre el nodo destino, se creara la aristas
+	4) repita 2) y 3) las veces que necesite
+	
+OBS: Para dejar de crear aristas cambie de modo, haciendo click en el boton
+"Cursor" del panel lateral.

@@ -1,0 +1,15 @@
+______
+
+ETIQUETAS:
+______
+
+Las etiquetas son las encargadas de identificar las nodos dentro del grafo
+estas puden ser cambiabas, por defecto un nodo se crea con la etiqueta "new"
+es importante que usted cambie la etiqueta de sus nodos, ya que estan se representan
+en su matriz de adyacencia. 
+
+Para cambiar una etiqueta siga los siguientes pasos:
+
+	1) Haga click con el boton derecho del mouse sobre un nodos
+	2) del menu contextual busque la opcion "Agregar Etiqueta"
+	3) Repita esta accion sobre los nodos que necesite.
