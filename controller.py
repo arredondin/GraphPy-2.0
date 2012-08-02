@@ -1,5 +1,6 @@
 from model import graph , algorithms
 from view import gui
+from helpBox import help
 import datatypes
 import copy
 
@@ -17,8 +18,9 @@ class Controller:
 		self.__undo_stack = algorithms.Actions()
 		self.__redo_stack = algorithms.Actions()
 		
-		self.__clipboard_nodes = []
-		self.__clipboard_edges = []
+		self.__clipboard_nodes = None
+		self.__clipboard_edges = None
+		self.__option = 0
 	#
 	#  PRIVATE METHODS
 	#
@@ -338,11 +340,34 @@ class Controller:
 		self.__view.colored(self.__modelGraph, self.__viewGraph)
 
 	def on_copy(self, widget, data=None):
-		self.__clipboard_nodes, self.__clipboard_edges = self.__view.on_copy(self.__viewGraph)
-		self.__view.set_new_position(self.__clipboard_nodes, self.__clipboard_edges)
+		if self.__view.on_copy(self.__viewGraph) != False:
+			self.__clipboard_nodes  = self.__view.on_copy(self.__viewGraph)[0]
+			self.__clipboard_edges = self.__view.on_copy(self.__viewGraph)[1]
+			self.__view.set_new_position(self.__clipboard_nodes, self.__clipboard_edges)
+			self.__option = 1
+
+	def on_cut(self, widget, data=None):
+		if self.__view.on_copy(self.__viewGraph) != False:
+			self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+			self.__clipboard_nodes  = self.__view.on_copy(self.__viewGraph)[0]
+			self.__clipboard_edges = self.__view.on_copy(self.__viewGraph)[1]
+			self.__view.cut_repeat(self.__clipboard_nodes, self.__clipboard_edges, self.__viewGraph)
+			self.__set_graph()
+			self.__option = 2
 
 	def on_paste(self, widget, data=None):
-		self.__view.paste_selected(self.__clipboard_nodes, self.__clipboard_edges)
+		if self.__clipboard_edges != None and self.__clipboard_nodes != None:
+			self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+			self.__view.paste_selected(self.__clipboard_nodes, self.__clipboard_edges, self.__viewGraph)
+			self.__set_graph()
+			if self.__option == 2:
+				self.__clipboard_nodes = None
+				self.__clipboard_edges = None
+				
+	
+	def show_help(self, widget, data=None):
+		helpPop = help.HelpUi()
+		helpPop.throw_help() 
 	
 a = Controller()
 a.throw_app()

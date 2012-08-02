@@ -262,15 +262,13 @@ class Ui:
  		self.__tmp = False
  		self.__draw.reset()
 
- 	def copy_selected(self):
- 		if self.__draw.status_temp() == True:
- 			return self.__draw.get_temp()
-
- 	def paste_selected(self, papelera, op):
- 		if op == 1:
- 			for i in papelera:
- 				self.__draw.paste_node((i.get_position()[0], i.get_position()[1]+25), i.get_label(), i.get_color(), i.get_tam(), i.get_form())
-
+ 	def paste_selected(self, nodes, edges, viewgraph):
+ 		for i in nodes:
+ 			viewgraph.get_nodes().append(i)
+ 		for i in edges:
+ 			viewgraph.get_edges().append(i)
+ 		self.__draw.redrawing()
+ 		
  	def show_matriz(self, datos, grafo):
  		dim = datos.get_nodes()
  		matrix = datos.get_matrix()
@@ -530,6 +528,8 @@ class Ui:
  	def on_copy(self, viewgraph):
  		if self.__draw.get_status() == 4 and self.__draw.get_selected() == 1:
  			return self.__draw.get_list_selected()
+ 		else:
+ 			return False
  			
  	def set_new_position(self, nodes, edges):
  		for i in nodes:
@@ -543,3 +543,12 @@ class Ui:
  					tupla = j.get_connection()
  					j.set_connection((tupla[0], iD+100))
  			i.set_id(iD+100)
+ 			
+ 	def cut_repeat(self, nodes, edges, viewgraph):
+ 		if len(nodes) != 0:
+ 			for i in nodes:
+ 				viewgraph.del_node(i.get_id())
+ 		if len(edges) != 0:
+ 			for i in edges:
+ 				viewgraph.del_edge(i.get_connection())
+ 		self.__draw.set_graph(viewgraph)
