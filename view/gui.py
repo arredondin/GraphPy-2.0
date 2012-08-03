@@ -71,6 +71,10 @@ class Ui:
 	def hide_exit(self):
 		self.__exit.hide()
 	
+	def hide_option_Edit(self):
+		self.__optionEditEdge.hide()
+		self.__optionEditNode.hide()
+		
 	def save_and_exit(self):
 		pass
 
@@ -418,7 +422,7 @@ class Ui:
 	def show_complement(self, grafo, viewgraph):
 		self.__loader.get_object("titulo_algoritmo").set_text("Complemento del Grafo")
 		if grafo.get_complementary() == None:
-			selfself.__loader.get_object("resultado").set_text("El Grafo No posee Complemento")
+			self.__loader.get_object("resultado").set_text("El Grafo No posee Complemento")
 		else:
 			matrix = grafo.get_complementary()
 			dim1 = len(matrix)

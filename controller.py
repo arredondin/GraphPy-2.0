@@ -25,7 +25,7 @@ class Controller:
 		self.__openBox = None
 		self.__saveBox = None
 		
-		self.__saveStatus = False
+		self.__saveStatus = True
 		
 	#
 	#  PRIVATE METHODS
@@ -441,8 +441,6 @@ class Controller:
 	def hide_open(self, widget, data=None):
 		self.__view.hide_open()
 
-
-
 	def on_save(self, widget, data=None):
 		dst = self.__view.get_directory_save()
 		if dst is not None:
@@ -453,6 +451,9 @@ class Controller:
 		
 	def show_save_close(self):
 		self.__view.show_save()
+		
+	def hide_option_Edit(self, widget, data=None):
+		self.__view.hide_option_Edit()
 	
 	def show_save(self, widget, data=None):
 		self.__view.show_save()

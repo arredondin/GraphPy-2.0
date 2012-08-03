@@ -141,6 +141,7 @@ Alberto Zenteno</property>
           <object class="GtkComboBoxText" id="tipe-align">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="active">1</property>
             <property name="entry_text_column">0</property>
             <property name="id_column">1</property>
             <items>
@@ -1057,6 +1058,7 @@ Alberto Zenteno</property>
           <object class="GtkComboBoxText" id="formato">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="active">1</property>
             <property name="entry_text_column">0</property>
             <property name="id_column">1</property>
             <items>
@@ -1106,6 +1108,7 @@ Alberto Zenteno</property>
           <object class="GtkComboBoxText" id="formas_arista">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="active">1</property>
             <property name="entry_text_column">0</property>
             <property name="id_column">1</property>
             <items>
@@ -1173,6 +1176,7 @@ Alberto Zenteno</property>
               <object class="GtkComboBoxText" id="formas">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="active">1</property>
                 <property name="entry_text_column">0</property>
                 <property name="id_column">0</property>
                 <items>
@@ -2538,7 +2542,7 @@ Alberto Zenteno</property>
           <object class="GtkLabel" id="title1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Lista de Nodos</property>
+            <property name="label" translatable="yes">Lista de Aristas</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -2550,6 +2554,7 @@ Alberto Zenteno</property>
           <object class="GtkComboBoxText" id="listado1">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="active">1</property>
             <property name="entry_text_column">0</property>
             <property name="id_column">1</property>
           </object>
@@ -2560,14 +2565,41 @@ Alberto Zenteno</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="button11">
-            <property name="label" translatable="yes">Aceptar</property>
-            <property name="use_action_appearance">False</property>
+          <object class="GtkBox" id="box44">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="use_action_appearance">False</property>
-            <signal name="clicked" handler="show_all_edge" swapped="no"/>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkButton" id="button11">
+                <property name="label" translatable="yes">Aceptar</property>
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="show_all_edge" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button18">
+                <property name="label" translatable="yes">Cancelar</property>
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="hide_option_Edit" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -2605,6 +2637,7 @@ Alberto Zenteno</property>
           <object class="GtkComboBoxText" id="listado">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="active">1</property>
             <property name="entry_text_column">0</property>
             <property name="id_column">1</property>
           </object>
@@ -2615,14 +2648,41 @@ Alberto Zenteno</property>
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="button6">
-            <property name="label" translatable="yes">Aceptar</property>
-            <property name="use_action_appearance">False</property>
+          <object class="GtkBox" id="box45">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="use_action_appearance">False</property>
-            <signal name="clicked" handler="show_all_node" swapped="no"/>
+            <property name="can_focus">False</property>
+            <child>
+              <object class="GtkButton" id="button6">
+                <property name="label" translatable="yes">Aceptar</property>
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="show_all_node" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button19">
+                <property name="label" translatable="yes">Cancelar</property>
+                <property name="use_action_appearance">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="hide_option_Edit" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
