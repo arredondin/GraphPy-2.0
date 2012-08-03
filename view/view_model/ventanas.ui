@@ -114,6 +114,65 @@ Alberto Zenteno</property>
       </object>
     </child>
   </object>
+  <object class="GtkWindow" id="align-window">
+    <property name="can_focus">False</property>
+    <property name="type">popup</property>
+    <property name="resizable">False</property>
+    <property name="window_position">center</property>
+    <property name="deletable">False</property>
+    <child>
+      <object class="GtkBox" id="box35">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel" id="label18">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Seleccione el Tipo de Alineacion</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkComboBoxText" id="tipe-align">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="entry_text_column">0</property>
+            <property name="id_column">1</property>
+            <items>
+              <item translatable="yes">Matriz</item>
+              <item translatable="yes">Triangular</item>
+            </items>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="button14">
+            <property name="label" translatable="yes">Aceptar</property>
+            <property name="use_action_appearance">False</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="use_action_appearance">False</property>
+            <signal name="clicked" handler="align_graph" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkWindow" id="color">
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
@@ -1465,7 +1524,7 @@ Alberto Zenteno</property>
         <property name="tooltip_text" translatable="yes">Permite Alinear el Grafo en forma matricial</property>
         <property name="label" translatable="yes">Alinear Grafo</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="align_graph" swapped="no"/>
+        <signal name="activate" handler="show_align" swapped="no"/>
       </object>
     </child>
     <child>
@@ -1609,6 +1668,7 @@ Alberto Zenteno</property>
     <property name="border_width">5</property>
     <property name="role">GtkFileChooserDialog</property>
     <property name="type_hint">dialog</property>
+    <property name="deletable">False</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="filechooserdialog-vbox1">
         <property name="can_focus">False</property>
@@ -1641,6 +1701,7 @@ Alberto Zenteno</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="hide_open" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1719,6 +1780,7 @@ Alberto Zenteno</property>
                         <property name="can_focus">False</property>
                         <property name="image">image16</property>
                         <property name="use_stock">False</property>
+                        <signal name="activate" handler="show_open" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -1729,6 +1791,7 @@ Alberto Zenteno</property>
                         <property name="can_focus">False</property>
                         <property name="image">image17</property>
                         <property name="use_stock">False</property>
+                        <signal name="activate" handler="show_save" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -1757,6 +1820,7 @@ Alberto Zenteno</property>
                         <property name="can_focus">False</property>
                         <property name="image">image18</property>
                         <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_close" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -1907,6 +1971,7 @@ Alberto Zenteno</property>
                 <property name="use_action_appearance">False</property>
                 <property name="image">open</property>
                 <property name="image_position">bottom</property>
+                <signal name="clicked" handler="show_open" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1943,6 +2008,7 @@ Alberto Zenteno</property>
                 <property name="use_action_appearance">False</property>
                 <property name="image">save</property>
                 <property name="image_position">bottom</property>
+                <signal name="clicked" handler="show_save" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2264,8 +2330,8 @@ Alberto Zenteno</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Guardar</property>
     <property name="role">GtkFileChooserDialog</property>
-    <property name="resizable">False</property>
     <property name="type_hint">dialog</property>
+    <property name="deletable">False</property>
     <property name="action">save</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="filechooserdialog-vbox2">
@@ -2299,6 +2365,7 @@ Alberto Zenteno</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="hide_save" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

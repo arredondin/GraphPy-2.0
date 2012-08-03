@@ -21,6 +21,12 @@ class Controller:
 		self.__clipboard_nodes = None
 		self.__clipboard_edges = None
 		self.__option = 0
+		
+		self.__openBox = None
+		self.__saveBox = None
+		
+		self.__saveStatus = False
+		
 	#
 	#  PRIVATE METHODS
 	#
@@ -385,10 +391,22 @@ class Controller:
 	def hide_about(self, widget, data=None):
 		self.__view.hide_dialog()
 	
+	def show_align(self, widget, data=None):
+		self.__view.show_align()
+	
 	def align_graph(self, widget, data=None):
 		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.align_graph(self.__viewGraph)
 		
+	def show_open(self, widget, data=None):
+		self.__view.show_open()
 	
-a = Controller()
-a.throw_app()
+	def hide_open(self, widget, data=None):
+		self.__view.hide_open()
+	
+	def show_save(self, widget, data=None):
+		self.__view.show_save()
+	
+	def hide_save(self, widget, data=None):
+		self.__view.hide_save()
+	
