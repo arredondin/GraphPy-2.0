@@ -1805,6 +1805,7 @@ Alberto Zenteno</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="on_open" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1889,6 +1890,7 @@ Alberto Zenteno</property>
                         <property name="can_focus">False</property>
                         <property name="image">image15</property>
                         <property name="use_stock">False</property>
+                        <signal name="activate" handler="on_new" swapped="no"/>
                       </object>
                     </child>
                     <child>
@@ -2109,6 +2111,7 @@ Alberto Zenteno</property>
                 <property name="use_action_appearance">False</property>
                 <property name="image">new</property>
                 <property name="image_position">bottom</property>
+                <signal name="clicked" handler="on_new" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -2469,6 +2472,7 @@ Alberto Zenteno</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
+                <signal name="clicked" handler="on_save" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
