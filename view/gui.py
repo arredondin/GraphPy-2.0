@@ -635,13 +635,26 @@ class Ui:
  				i = i + j 					
  		self.__alignMenu.hide()
  		self.__draw.set_graph(grafo)
+
+ 	def repaint_from_controller(self,graph):
+ 		self.__draw.set_graph(graph)
+ 		
+ 	def get_file_to_save(self):
+ 		return self.__openWindow.get_filename()
  	
  	def show_open(self):
  		self.__openWindow = self.__loader.get_object("openFile")
+ 		self.__filter = Gtk.FileFilter()
+ 		self.__filter.add_pattern("*.gpy")
+ 		self.__openWindow.set_filter(self.__filter)
  		self.__openWindow.show()
  	
  	def hide_open(self):
  		self.__openWindow.hide()
+
+
+ 	def get_directory_save(self):
+ 		return  self.__saveWindow.get_filename()
  	
  	def show_save(self):
  		self.__saveWindow = self.__loader.get_object("saveFile")

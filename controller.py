@@ -55,16 +55,13 @@ class Controller:
 		self.__view.throw_ui()
 	
 	def on_close(self,widget,data=None):
-		if self.__saveStatus == False:
-			self.__view.show_exit()
-		else:
-			self.__view.stop_ui()
+		self.__view.stop_ui()
 	
 	def on_close_without_save(self,widget,data=None):
 		self.__view.stop_ui()
 	
 	def save_and_exit(self, widget, data=None):
-		self.__view.save_and_exit()
+		self.show_save_close()
 	
 	def hide_exit(self, widget, data=None):
 		self.__view.hide_exit()
@@ -425,16 +422,48 @@ class Controller:
 	def align_graph(self, widget, data=None):
 		self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 		self.__view.align_graph(self.__viewGraph)
+
+
+	def on_open(self,widget, data=None):
+		origin = self.__view.get_file_to_save()
+		if origin is not None:
+			open = algorithms.Files(origin,False)
+			self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
+			self.__viewGraph = open.open_from_file(datatypes)
+			self.__view.rapaint_from_controller(self.__viewGraph)
+			self.__set_graph()
+		self.__view.hide_open()
+
 		
 	def show_open(self, widget, data=None):
 		self.__view.show_open()
 	
 	def hide_open(self, widget, data=None):
 		self.__view.hide_open()
+
+
+
+	def on_save(self, widget, data=None):
+		dst = self.__view.get_directory_save()
+		if dst is not None:
+			saving = algorithms.Files(dst+".gpy",True)
+			saving.save_on_file(self.__viewGraph)
+		self.__view.hide_save()
+		self.__saveStatus = True
+		
+	def show_save_close(self):
+		self.__view.show_save()
 	
 	def show_save(self, widget, data=None):
 		self.__view.show_save()
 	
 	def hide_save(self, widget, data=None):
 		self.__view.hide_save()
+
+	def on_new(self, widget, data=None):
+		if self.__saveStatus == False:
+			self.show_save(widget,data)
+		self.__viewGraph = datatypes.Graph()
+		self.__view.repaint_from_controller(self.__viewGraph)
+		self.__set_graph()
 	
