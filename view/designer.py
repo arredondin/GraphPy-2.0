@@ -142,7 +142,10 @@ class Designer:
 					tmpInicio = j.get_position()
 				if j.get_id() == id_nodos[1]:
 					tmpFinal = j.get_position()
-			pend = ( tmpInicio[1] - tmpFinal[1] )/( tmpInicio[0] - tmpFinal[0])
+			if tmpInicio[0] - tmpFinal[0] == 0:
+				pend = 0
+			else:
+				pend = ( tmpInicio[1] - tmpFinal[1] )/( tmpInicio[0] - tmpFinal[0])
 			resultado = (pend*(x - tmpInicio[0]))-(y - tmpInicio[1])
 			if resultado <= i.get_size() and resultado >= -i.get_size():
 				if tmpInicio[0] < x and tmpFinal[0] > x:

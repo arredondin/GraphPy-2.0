@@ -404,7 +404,7 @@ class Ui:
 	def draw_complement(self, grafo, viewgraph):
 		self.__loader.get_object("titulo_algoritmo").set_text("Grafo Completado")
 		if grafo.get_complementary() == None:
-			selfself.__loader.get_object("resultado").set_text("El Grafo No posee Complemento")
+			self.__loader.get_object("resultado").set_text("El Grafo No posee Complemento")
 		else:
 			matrix = grafo.get_complementary()
 			dim1 = len(matrix)

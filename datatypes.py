@@ -65,7 +65,7 @@ class Edge:
 		self.__color = (0,0,0)
 		self.__shape = 1
 		self.__weight = 1
-		self.__size = 5
+		self.__size = 2
 		self.__connection = connection
 	
 	def set_color(self, newColor):
