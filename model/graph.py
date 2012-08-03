@@ -518,7 +518,7 @@ class Graph:
 				start = oddCounter[0]
 			else:
 				start = oddCounter[1]
-		if len(oddCounter) == 0:
+		else:
 			start = 0
 		array = []
 		path = []
