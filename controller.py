@@ -25,7 +25,7 @@ class Controller:
 		self.__openBox = None
 		self.__saveBox = None
 		
-		self.__saveStatus = False
+		self.__saveStatus = True
 		
 	#
 	#  PRIVATE METHODS
