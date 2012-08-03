@@ -352,7 +352,6 @@ class Ui:
 	def show_connected(self, grafo):
 		self.__loader.get_object("titulo_algoritmo").set_text("Grafo Conexo")
 		if grafo.connected()[0]:
-			print "waka"
 			if grafo.connected()[1] == 'strongly connected':
 				self.__loader.get_object("resultado").set_text("El Grafo es fuertemente Conexo")
 			if grafo.connected()[1] == 'weakly connected':
