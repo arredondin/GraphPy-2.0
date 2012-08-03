@@ -172,7 +172,7 @@ class Ui:
 		self.__draw.reset()
 
 	def set_new_label_edge(self, grafo, viewgraph):
-		self.__tmp.set_weight(self.__sizeText.get_text())
+		self.__tmp.set_weight(int(self.__sizeText.get_text()))
 		if viewgraph.get_type():
 			grafo.add_edge_dir(viewgraph.get_position_node(self.__tmp.get_connection()[0]),viewgraph.get_position_node(self.__tmp.get_connection()[1]),int(self.__tmp.get_weight()))
 		else:

@@ -135,6 +135,8 @@ class Designer:
 	
 	def __over_edge(self, x, y):
 		"""Funcion que obtiene el Arco que esta sobre el punto x,y"""
+		x = self.__drawArea.get_pointer()[0]
+		y = self.__drawArea.get_pointer()[1]
 		for i in self.__graph.get_edges():
 			id_nodos = i.get_connection()
 			for j in self.__graph.get_nodes():
@@ -142,16 +144,21 @@ class Designer:
 					tmpInicio = j.get_position()
 				if j.get_id() == id_nodos[1]:
 					tmpFinal = j.get_position()
-			if tmpInicio[0] - tmpFinal[0] == 0:
+			if tmpInicio[1] - tmpFinal[1] == 0:
 				pend = 0
 			else:
-				pend = ( tmpInicio[1] - tmpFinal[1] )/( tmpInicio[0] - tmpFinal[0])
-			resultado = (pend*(x - tmpInicio[0]))-(y - tmpInicio[1])
-			if resultado <= i.get_size() and resultado >= -i.get_size():
-				if tmpInicio[0] < x and tmpFinal[0] > x:
-					return i
-				if tmpFinal[0] < x and tmpInicio[0] > x:
-					return i
+				if tmpInicio[0] - tmpFinal[0] == 0:
+					resultado = (tmpInicio[0], tmpFinal[0])
+					if resultado[0] == x or resultado[1] == x:
+							return i
+				else:
+					pend = ( tmpInicio[1] - tmpFinal[1] )/( tmpInicio[0] - tmpFinal[0])
+					resultado = (pend*(x - tmpInicio[0]))-(y - tmpInicio[1])
+					if resultado <= i.get_size()+5 and resultado >= -i.get_size()-5:
+						if tmpInicio[0] <= x and tmpFinal[0] >= x:
+							return i
+						if tmpFinal[0] <= x and tmpInicio[0] >= x:
+							return i
 		return False
 	
 	def __selectMove(self, data=None):
