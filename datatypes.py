@@ -3,10 +3,10 @@ import time
 
 class Node:
 	"""Clase Nodo, generada para la vista"""
-	def __init__(self, data):
+	def __init__(self, data, count):
 		self.__color = (0,0,0)
 		self.__shape = 1 		#Puede Ser 1 o 2
-		self.__label = "new"
+		self.__label = "new" + str(count)
 		self.__size = 10
 		self.__id = random.randint(1,1000)
 		self.__position = (data.x, data.y) 		#Posicion del Mouse
@@ -121,10 +121,12 @@ class Graph:
 		self.__nodes = []
 		self.__edges = []
 		self.__type = False
+		self.__count = 0
 	
 	def new_node(self, pos):
 		"""Inserta un nuevo Nodo en el Grafo, recibe el ID, Etiqueta y la Posicion (x,y)"""
-		tmp = Node(pos)
+		tmp = Node(pos, self.__count)
+		self.__count += 1
 		self.__nodes.append(tmp)
 	
 	def new_edge(self, connection):
