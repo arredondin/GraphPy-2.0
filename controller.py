@@ -63,7 +63,7 @@ class Controller:
 	def on_close_without_save(self,widget,data=None):
 		self.__view.stop_ui()
 	
-	def save_and_exit(self, widget; data=None):
+	def save_and_exit(self, widget, data=None):
 		self.__view.save_and_exit()
 	
 	def hide_exit(self, widget, data=None):
