@@ -50,7 +50,7 @@ class Files:
 			design = module
 			tmp = design.Graph()
 			type= bool(self.__file.readline())
-			tmp.set_type()
+			tmp.set_type(type)
 			cnt_nodes = int(self.__file.readline())
 			for i in xrange(cnt_nodes):
 				id = int(self.__file.readline())

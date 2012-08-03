@@ -430,7 +430,7 @@ class Controller:
 			open = algorithms.Files(origin,False)
 			self.__redo_stack.push(copy.deepcopy(self.__viewGraph))
 			self.__viewGraph = open.open_from_file(datatypes)
-			self.__view.rapaint_from_controller(self.__viewGraph)
+			self.__view.repaint_from_controller(self.__viewGraph)
 			self.__set_graph()
 		self.__view.hide_open()
 

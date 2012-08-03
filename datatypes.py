@@ -3,14 +3,17 @@ import time
 
 class Node:
 	"""Clase Nodo, generada para la vista"""
-	def __init__(self, data, count):
+	def __init__(self, data=None, count=None):
 		self.__color = (0,0,0)
 		self.__shape = 1 		#Puede Ser 1 o 2
 		self.__label = "new" + str(count)
 		self.__size = 10
 		self.__id = random.randint(1,1000)
-		self.__position = (data.x, data.y) 		#Posicion del Mouse
-	
+		if data!=None:
+			self.__position = (data.x, data.y) 		#Posicion del Mouse
+		else:
+			self.__position = (0,0)
+					
 	def set_color(self, newColor):
 		"""Modifica el Color del Nodo"""
 		self.__color = newColor
@@ -122,6 +125,12 @@ class Graph:
 		self.__edges = []
 		self.__type = False
 		self.__count = 0
+	
+	def add_node(self, node):
+		self.__nodes.append(node)
+	
+	def add_edge(self, node):
+		self.__edges.append(node)
 	
 	def new_node(self, pos):
 		"""Inserta un nuevo Nodo en el Grafo, recibe el ID, Etiqueta y la Posicion (x,y)"""
