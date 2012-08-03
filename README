@@ -1,0 +1,5 @@
+Para dar permisos de ejecución al programa, ejecutar desde una terminal:
+	$ sudo chmod +x GraphPy.py
+
+Para ejecutar desde una terminal:
+	$ ./GraphPy.py
