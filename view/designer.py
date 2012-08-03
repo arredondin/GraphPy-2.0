@@ -316,10 +316,14 @@ class Designer:
 				tmp = self.__graph.get_edge((self.__temp[i].get_id(), self.__temp[j].get_id()))
 				if tmp != False:
 					self.__edges.append(tmp)
-		print "dimension:", len(self.__edges)
 			
 	def get_list_selected(self):
 		del self.__temp[:]
 		self.get_all_over_select()
 		return (copy.deepcopy(self.__temp), copy.deepcopy(self.__edges))
+		
+	def set_temp(self, temp):
+		del self.__temp[:]
+		del self.__edges[:]
+		self.__temp = temp
 		
