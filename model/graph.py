@@ -366,6 +366,19 @@ class Graph:
 		for i in xrange(dim):
 			if colored[i] == 0:
 				colored[i] = 1
+				finished = False
+				while not finished:
+					finished = True
+					for j in xrange(i):
+						if matrix[i][j] != 0 and colored[i] == colored[j]:
+							if colored[i] != lastColor:
+								colored[i] += 1
+								finished = False
+							if colored[i] != lastColor:
+								colored[i] = lastColor + 1
+							break
+			if colored.count(lastColor + 1) != 0:
+				lastColor += 1
 			
 			for j in xrange(i + 1,dim): # setear valores en los nodos siguientes
 				if matrix[i][j] != 0:
