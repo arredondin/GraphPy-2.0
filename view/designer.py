@@ -324,5 +324,6 @@ class Designer:
 		
 	def set_temp(self, temp):
 		del self.__temp[:]
+		del self.__edges[:]
 		self.__temp = temp
 		
