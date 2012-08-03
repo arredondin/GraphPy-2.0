@@ -43,6 +43,7 @@ class Ui:
 		self.__optionEditEdge = self.__loader.get_object("show-edges")
 		self.__editNode = self.__loader.get_object("edita-nodo")
 		self.__editEdge = self.__loader.get_object("edita-arista")
+		self.__exit = self.__loader.get_object("exit")
 		self.__draw = designer.Designer(self.__darea, graph)
 	
 	def connect_signals(self,controller):
@@ -63,6 +64,15 @@ class Ui:
 
 	def show_window_export(self):
 		self.__exportWindow.show()
+
+	def show_exit(self):
+		self.__exit.show()
+	
+	def hide_exit(self):
+		self.__exit.hide()
+	
+	def save_and_exit(self):
+		pass
 
 	def show_print(self):
 		self.__printWindow = Gtk.PrintOperation()
@@ -592,19 +602,52 @@ class Ui:
  		self.__draw.set_graph(viewgraph)
  		
  	def show_dialog(self):
- 		self.__aboutDialog = self.__loader.get_object("aboutdialog1").show()
+ 		self.__aboutDialog = self.__loader.get_object("aboutdialog1")
+ 		self.__aboutDialog.show()
  	
  	def hide_dialog(self):
- 		self.__aboutDialog = self.__loader.get_object("aboutdialog1").hide()
+ 		self.__aboutDialog.hide()
+ 	
+ 	def show_align(self):
+ 		self.__alignMenu = self.__loader.get_object("align-window")
+ 		self.__alignMenu.show()
  	
  	def align_graph(self, grafo):
- 		dim1 = len(grafo.get_nodes())
- 		for i in xrange(dim1):
- 			j = 0
- 			while j < 4:
- 				if (i*4+j) < dim1:
- 					grafo.get_nodes()[i*4+j].set_position(((100*(j+1)), (100*(i+1))))
- 				j = j+1
+ 		if self.__loader.get_object("tipe-align").get_active_text() == "Matriz":
+ 			dim1 = len(grafo.get_nodes())
+ 			for i in xrange(dim1):
+ 				j = 0
+ 				while j < 4:
+ 					if (i*4+j) < dim1:
+ 						grafo.get_nodes()[i*4+j].set_position(((70*(j+1)), (70*(i+1))))
+ 					j = j+1
+ 		if self.__loader.get_object("tipe-align").get_active_text() == "Triangular":
+ 			dim1 = len(grafo.get_nodes())
+ 			i = 0
+ 			cont = 0
+ 			while i < dim1:
+ 				j = 0
+ 				while j < (i+1):
+ 					if (i+j) < dim1:
+ 						grafo.get_nodes()[i+j].set_position(((70*(j+1)), (70*(cont+1))))
+ 					j = j+1					
+ 				cont= cont + 1
+ 				i = i + j 					
+ 		self.__alignMenu.hide()
  		self.__draw.set_graph(grafo)
- 				
+ 	
+ 	def show_open(self):
+ 		self.__openWindow = self.__loader.get_object("openFile")
+ 		self.__openWindow.show()
+ 	
+ 	def hide_open(self):
+ 		self.__openWindow.hide()
+ 	
+ 	def show_save(self):
+ 		self.__saveWindow = self.__loader.get_object("saveFile")
+ 		self.__saveWindow.show()
+ 	
+ 	def hide_save(self):
+ 		self.__saveWindow.hide()
+
  		

@@ -1,10 +1,4 @@
-#!/usr/bin/python2
+import controller
 
-def main():
-	print 'Iniciando GraphPy utilizando el interprete local de python'
-	print '...'
-	import controller
-	print 'GraphPy se ha ejecutado correctamente'
-
-if __name__ == "__main__":
-    main()
+a = controller.Controller()
+a.throw_app()
