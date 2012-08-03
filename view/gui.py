@@ -277,6 +277,7 @@ class Ui:
  			viewgraph.get_nodes().append(i)
  		for i in edges:
  			viewgraph.get_edges().append(i)
+ 		self.__draw.set_temp(nodes)
  		self.__draw.redrawing()
  		
  	def show_matriz(self, datos, grafo):
