@@ -43,6 +43,7 @@ class Ui:
 		self.__optionEditEdge = self.__loader.get_object("show-edges")
 		self.__editNode = self.__loader.get_object("edita-nodo")
 		self.__editEdge = self.__loader.get_object("edita-arista")
+		self.__exit = self.__loader.get_object("exit")
 		self.__draw = designer.Designer(self.__darea, graph)
 	
 	def connect_signals(self,controller):
@@ -63,6 +64,15 @@ class Ui:
 
 	def show_window_export(self):
 		self.__exportWindow.show()
+
+	def show_exit(self):
+		self.__exit.show()
+	
+	def hide_exit(self):
+		self.__exit.hide()
+	
+	def save_and_exit(self):
+		pass
 
 	def show_print(self):
 		self.__printWindow = Gtk.PrintOperation()
